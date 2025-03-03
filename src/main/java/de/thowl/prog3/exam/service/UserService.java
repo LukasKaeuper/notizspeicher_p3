@@ -10,6 +10,9 @@ public interface UserService {
 
     public User getUser(String name);
 
+    public User getUserWithPassword(String name, String password);
+
     public List<User> getAllUsers();
+
 
 }

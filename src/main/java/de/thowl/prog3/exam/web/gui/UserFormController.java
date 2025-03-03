@@ -34,12 +34,15 @@ public class UserFormController {
     public String processUserForm(Model model, UserForm formdata) {
         log.debug("entering processUserForm");
         String username = formdata.getUsername();
+        String password = formdata.getPassword();
         log.debug("searching for User={}", username);
+        log.debug("searching for Password={}", password);
+
 
         // retrieve user record
         String target = "userform"; // FAILURE LANE -> back to form page
         try {
-            User u = this.svc.getUser(username);
+            User u = this.svc.getUserWithPassword(username, password);
             if (u != null) {
                 model.addAttribute("user", this.mapper.map(u));
                 target = "showuser"; // SUCCESS LANE
