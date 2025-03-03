@@ -2,20 +2,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Prog3 - Exam Template</title>
+    <title>Prog3 - Notizspeicher - Anmelden</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+            margin: 0;
+            flex-direction: column;
+        }
+    </style>
 </head>
 
 <body>
     <img th:src="@{/img/thowl_logo.png}" />
-    <h1>Prog3 Exam template</h1>
+    <h1>Anmelden</h1>
 
     <form class="form" method="POST" action="/user">
         <label for="uname">Benutzername:</label>
         <input type="text" id="uname" name="username"/>
-
+        <br>
+        <br>
         <label for="pwd">Passwort:</label>
         <input type="text" id="pwd" name="password"/>
-
+        <br>
+        <br>
         <input type="submit" value="Anzeigen">
     </form>
 
