@@ -2,6 +2,7 @@ D:\GitHub\notizspeicher_p3\src\main\java\de\thowl\prog3\exam\ExamApplication.jav
 D:\GitHub\notizspeicher_p3\src\main\java\de\thowl\prog3\exam\service\impl\UserServiceImpl.java
 D:\GitHub\notizspeicher_p3\src\main\java\de\thowl\prog3\exam\service\UserService.java
 D:\GitHub\notizspeicher_p3\src\main\java\de\thowl\prog3\exam\ServletInitializer.java
+D:\GitHub\notizspeicher_p3\src\main\java\de\thowl\prog3\exam\storage\entities\Notiz.java
 D:\GitHub\notizspeicher_p3\src\main\java\de\thowl\prog3\exam\storage\entities\User.java
 D:\GitHub\notizspeicher_p3\src\main\java\de\thowl\prog3\exam\storage\repositories\UserRepository.java
 D:\GitHub\notizspeicher_p3\src\main\java\de\thowl\prog3\exam\web\api\DataNotFoundException.java
