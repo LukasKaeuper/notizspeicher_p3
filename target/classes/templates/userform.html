@@ -21,6 +21,10 @@
             display: flex;
             margin: 20px auto;
         }
+        .message {
+            color: red;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -42,6 +46,9 @@
     <br>
     <br>
     <button onclick="window.location.href='/register'">Registrieren</button>
+    <br>
+    <br>
+    <div th:if="${message}" th:text="${message}" class="message"></div>
 
 </body>
 </html>

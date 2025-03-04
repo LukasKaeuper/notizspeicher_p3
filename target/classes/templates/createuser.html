@@ -24,31 +24,38 @@
             display: flex;
             margin: 20px auto;
         }
+        .message {
+            color: green;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
-<img th:src="@{/img/thowl_logo.png}" />
-<h1>Konto erstellen</h1>
+    <img th:src="@{/img/thowl_logo.png}" />
+    <h1>Konto erstellen</h1>
 
-<form class="form" method="POST" action="/register">
-    <label for="uname">Benutzername:</label>
-    <input type="text" id="uname" name="username" required/>
+    <form class="form" method="POST" action="/register">
+        <label for="uname">Benutzername:</label>
+        <input type="text" id="uname" name="username" required/>
+        <br>
+        <br>
+        <label for="pwd" class="move-right-password">Passwort:</label>
+        <input type="password" id="pwd" name="password" required/>
+        <br>
+        <br>
+        <label for="mail" class="move-right-mail">E-Mail:</label>
+        <input type="email" id="mail" name="email" required/>
+        <br>
+        <br>
+        <input type="submit" value="Registrieren" class="center-button"/>
+    </form>
     <br>
     <br>
-    <label for="pwd" class="move-right-password">Passwort:</label>
-    <input type="password" id="pwd" name="password" required/>
+    <button onclick="window.location.href='/user'">Anmelden</button>
     <br>
     <br>
-    <label for="mail" class="move-right-mail">E-Mail:</label>
-    <input type="email" id="mail" name="email" required/>
-    <br>
-    <br>
-    <input type="submit" value="Registrieren" class="center-button"/>
-</form>
-<br>
-<br>
-<button onclick="window.location.href='/user'">Anmelden</button>
+    <div th:if="${message}" th:text="${message}" class="message"></div>
 
 </body>
 </html>

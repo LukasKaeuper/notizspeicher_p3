@@ -49,6 +49,7 @@ public class UserFormController {
             }
         } catch (Exception e) {
             log.error("unable to retrieve user data");
+            model.addAttribute("message", "Benutzer nicht gefunden!");
         }
         return target;
     }
@@ -67,7 +68,8 @@ public class UserFormController {
         newUser.setPassword(formdata.getPassword());
         newUser.setEmail(formdata.getEmail());
         svc.saveUser(newUser);
-        return "redirect:/user";
+        model.addAttribute("message", "Benutzer wurde erfolgreich registriert!");
+        return "createuser";
     }
 
 }
