@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Prog3 - Notizspeicher - Registrieren</title>
+    <title>Notizspeicher - Registrieren</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -15,7 +15,7 @@
             font-family: 'Roboto', sans-serif;
         }
         .move-right-password {
-            margin-left: 35px;
+            margin-left: 36px;
         }
         .move-right-mail {
             margin-left: 58px;
@@ -26,6 +26,10 @@
         }
         .message {
             color: green;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
             margin-top: 20px;
         }
     </style>
@@ -55,6 +59,7 @@
     <button onclick="window.location.href='/user'">Anmelden</button>
     <br>
     <br>
+    <div th:if="${errorMessage}" th:text="${errorMessage}" class="error"></div>
     <div th:if="${message}" th:text="${message}" class="message"></div>
 
 </body>

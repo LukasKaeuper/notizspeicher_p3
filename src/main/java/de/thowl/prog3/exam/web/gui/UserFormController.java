@@ -49,7 +49,7 @@ public class UserFormController {
             }
         } catch (Exception e) {
             log.error("unable to retrieve user data");
-            model.addAttribute("message", "Benutzer nicht gefunden!");
+            model.addAttribute("message", "Benutzer nicht gefunden oder Passwort falsch!");
         }
         return target;
     }
@@ -62,6 +62,11 @@ public class UserFormController {
 
     @PostMapping("/register")
     public String registerUser(Model model, UserForm formdata) {
+        if (formdata.getUsername().length() < 5 || formdata.getPassword().length() < 5) {
+            log.error("validation error");
+            model.addAttribute("errorMessage", "Fehler bei der Eingabe!, mindesens 5 Zeichen");
+            return "createuser";
+        }
         log.debug("entering registerUser");
         User newUser = new User();
         newUser.setName(formdata.getUsername());
@@ -70,6 +75,11 @@ public class UserFormController {
         svc.saveUser(newUser);
         model.addAttribute("message", "Benutzer wurde erfolgreich registriert!");
         return "createuser";
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        return "redirect:/user";
     }
 
 }
