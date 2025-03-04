@@ -3,6 +3,7 @@
 
 <head>
     <title>Prog3 - Notizspeicher - Anmelden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
@@ -11,6 +12,14 @@
             height: 50vh;
             margin: 0;
             flex-direction: column;
+            font-family: 'Roboto', sans-serif;
+        }
+        .move-right {
+            margin-left: 35px;
+        }
+        .center-button {
+            display: flex;
+            margin: 20px auto;
         }
     </style>
 </head>
@@ -23,12 +32,16 @@
         <label for="uname">Benutzername:</label>
         <input type="text" id="uname" name="username" required/>
         <br>
-        <label for="pwd">Passwort:</label>
+        <br>
+        <label for="pwd" class="move-right">Passwort:</label>
         <input type="password" id="pwd" name="password" required/>
         <br>
-        <input type="submit" value="Anzeigen">
+        <br>
+        <input type="submit" value="Anmelden" class="center-button"/>
     </form>
-
+    <br>
+    <br>
+    <button onclick="window.location.href='/register'">Registrieren</button>
 
 </body>
 </html>

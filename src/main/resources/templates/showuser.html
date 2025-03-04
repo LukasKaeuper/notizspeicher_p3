@@ -2,19 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Prog3 - Exam Template</title>
+    <title>Prog3 - Notizspeicher - Dashboard</title>
 </head>
 
 <body>
     <img th:src="@{/img/thowl_logo.png}" />
-    <h1>Prog3 Exam template</h1>
+    <h1>Dashboard - Willkommen, <span th:text="${user.username}">USER_NAME</span></h1>
 
     <h1>User details:</h1>
 
-    ID=<div th:text="${user.id}">USER_ID</div>
-    Name=<div th:text="${user.username}">USER_NAME</div>
-    E-Mail=<div th:text="${user.email}">USER_EMAIL</div>
-
+    <div>
+        <span>ID = <span th:text="${user.id}">USER_ID</span></span>
+        <br>
+        <span>Name = <span th:text="${user.username}">USER_NAME</span></span>
+        <br>
+        <span>E-Mail = <span th:text="${user.email}">USER_EMAIL</span></span>
+    </div>
 
 </body>
 </html>

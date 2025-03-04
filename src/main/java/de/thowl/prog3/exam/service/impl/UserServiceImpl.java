@@ -19,6 +19,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository repository;
 
+    public void saveUser(User user) {
+        repository.save(user);
+    }
+
     @Override
     public User getUser(long id) {
         log.debug("entering getUser(id={})", id);
@@ -49,4 +53,5 @@ public class UserServiceImpl implements UserService {
         }
         return result;
     }
+
 }

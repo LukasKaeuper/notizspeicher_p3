@@ -53,4 +53,21 @@ public class UserFormController {
         return target;
     }
 
+    @GetMapping("/register")
+    public String showRegisterForm() {
+        log.debug("entering showRegisterForm");
+        return "createuser";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(Model model, UserForm formdata) {
+        log.debug("entering registerUser");
+        User newUser = new User();
+        newUser.setName(formdata.getUsername());
+        newUser.setPassword(formdata.getPassword());
+        newUser.setEmail(formdata.getEmail());
+        svc.saveUser(newUser);
+        return "redirect:/user";
+    }
+
 }
