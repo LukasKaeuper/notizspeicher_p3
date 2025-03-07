@@ -31,7 +31,7 @@ public class UserFormController {
     @GetMapping("/user")
     public String showUserForm() {
         log.debug("entering showUserForm");
-        return "userform";
+        return "login";
     }
 
     @PostMapping("/user")
@@ -43,12 +43,12 @@ public class UserFormController {
 
 
         // retrieve user record
-        String target = "userform"; // FAILURE LANE -> back to form page
+        String target = "login"; // FAILURE LANE -> back to form page
         try {
             User u = this.svc.getUser(username);
             if (u != null && encoder.matches(password, u.getPassword())) {
                 model.addAttribute("user", this.mapper.map(u));
-                target = "showuser"; // SUCCESS LANE
+                target = "dashboard"; // SUCCESS LANE
             }
         } catch (Exception e) {
             log.error("unable to retrieve user data");
@@ -60,7 +60,7 @@ public class UserFormController {
     @GetMapping("/register")
     public String showRegisterForm() {
         log.debug("entering showRegisterForm");
-        return "createuser";
+        return "register";
     }
 
     @PostMapping("/register")
@@ -68,7 +68,7 @@ public class UserFormController {
         if (formdata.getUsername().length() < 5 || formdata.getPassword().length() < 5) {
             log.error("validation error");
             model.addAttribute("errorMessage", "Fehler bei der Eingabe!, mindesens 5 Zeichen");
-            return "createuser";
+            return "register";
         }
         log.debug("entering registerUser");
         User newUser = new User();
@@ -77,7 +77,7 @@ public class UserFormController {
         newUser.setEmail(formdata.getEmail());
         svc.saveUser(newUser);
         model.addAttribute("message", "Benutzer wurde erfolgreich registriert!");
-        return "createuser";
+        return "register";
     }
 
     @GetMapping("/logout")
