@@ -29,7 +29,7 @@ public class User {
     private String name;
 
     @Column(name = "password")
-    @Size(min = 5, max = 30)
+    //@Size(min = 5, max = 30)
     private String password;
 
     @Column(name = "email")

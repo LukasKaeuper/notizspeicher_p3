@@ -2,6 +2,7 @@ package de.thowl.prog3.exam.web.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,9 @@ public class UserFormController {
     @Autowired
     UserService svc;
 
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
     @GetMapping("/user")
     public String showUserForm() {
         log.debug("entering showUserForm");
@@ -36,14 +40,13 @@ public class UserFormController {
         String username = formdata.getUsername();
         String password = formdata.getPassword();
         log.debug("searching for User={}", username);
-        log.debug("searching for Password={}", password);
 
 
         // retrieve user record
         String target = "userform"; // FAILURE LANE -> back to form page
         try {
-            User u = this.svc.getUserWithPassword(username, password);
-            if (u != null) {
+            User u = this.svc.getUser(username);
+            if (u != null && encoder.matches(password, u.getPassword())) {
                 model.addAttribute("user", this.mapper.map(u));
                 target = "showuser"; // SUCCESS LANE
             }
@@ -70,7 +73,7 @@ public class UserFormController {
         log.debug("entering registerUser");
         User newUser = new User();
         newUser.setName(formdata.getUsername());
-        newUser.setPassword(formdata.getPassword());
+        newUser.setPassword(encoder.encode(formdata.getPassword()));
         newUser.setEmail(formdata.getEmail());
         svc.saveUser(newUser);
         model.addAttribute("message", "Benutzer wurde erfolgreich registriert!");
