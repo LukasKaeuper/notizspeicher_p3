@@ -1,5 +1,6 @@
 package de.thowl.prog3.exam.web.mapper;
 
+import de.thowl.prog3.exam.web.dto.UserDTO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,8 +11,8 @@ import org.springframework.stereotype.Component;
 @Component("usermapper")
 public class UserMapper {
 
-    public de.thowl.prog3.exam.web.dto.User map(de.thowl.prog3.exam.storage.entities.User in) {
-        return new de.thowl.prog3.exam.web.dto.User(in.getId(), in.getName(), in.getEmail());
+    public UserDTO map(de.thowl.prog3.exam.storage.entities.User in) {
+        return new UserDTO(in.getId(), in.getName(), in.getEmail());
     }
 
 }

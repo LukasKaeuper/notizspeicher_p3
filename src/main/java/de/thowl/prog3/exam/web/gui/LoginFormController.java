@@ -1,6 +1,8 @@
 package de.thowl.prog3.exam.web.gui;
 
 import de.thowl.prog3.exam.core.AuthenticationService;
+import de.thowl.prog3.exam.web.dto.UserDTO;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -35,7 +37,7 @@ public class LoginFormController {
     }
 
     @PostMapping("/login")
-    public String processUserForm(Model model, UserForm formdata) {
+    public String processUserForm(Model model, UserForm formdata, HttpSession session) {
         log.debug("entering processLoginForm");
         String username = formdata.getUsername();
         String password = formdata.getPassword();
@@ -47,10 +49,12 @@ public class LoginFormController {
         try {
             User u = this.svc.getUserWithPassword(username, password);
             if (this.auth.isValid(username, password)) {
-                model.addAttribute("user", this.mapper.map(u));
+                UserDTO userDTO = this.mapper.map(u);
+                session.setAttribute("user", userDTO);
+                //model.addAttribute("user", this.mapper.map(u));
                 log.debug("User is valid, attempting to login");
                 auth.login(username, password);
-                target = "dashboard"; // SUCCESS LANE
+                target = "redirect:/dashboard"; // SUCCESS LANE
             }
         } catch (Exception e) {
             log.error("unable to retrieve user data");

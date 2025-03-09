@@ -3,6 +3,7 @@ package de.thowl.prog3.exam.web.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thowl.prog3.exam.web.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +33,9 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public List<de.thowl.prog3.exam.web.dto.User> getUsers() {
+    public List<UserDTO> getUsers() {
         log.debug("entering getUsers");
-        List<de.thowl.prog3.exam.web.dto.User> result = new ArrayList<>();
+        List<UserDTO> result = new ArrayList<>();
         List<User> users = this.service.getAllUsers();
         for (User u : users) {
             result.add(this.mapper.map(u));
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public de.thowl.prog3.exam.web.dto.User getUserbyId(@PathVariable Long id) {
+    public UserDTO getUserbyId(@PathVariable Long id) {
         log.debug("entering getUserById, id={}", id);
         User u = this.service.getUser(id);
         return this.mapper.map(u);

@@ -31,10 +31,13 @@ public class Session {
     private String token;
     private Long userId;
 
+    public static String currentToken;
+
     public Session(String token, User u) {
         this.token = token;
         this.userId = u.getId();
         this.createdAt = new Date();
+        currentToken = token;
     }
 
 }

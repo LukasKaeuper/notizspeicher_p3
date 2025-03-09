@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Slf4j
 @Controller
-public class LogoutController {
+public class LogoutFormController {
 
     @Autowired
     private AuthenticationService auth;
