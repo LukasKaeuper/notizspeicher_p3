@@ -14,7 +14,7 @@ public class WebConfig {
     public FilterRegistrationBean<AuthenticationFilter> authenticationFilter(TokenService tokenService) {
         FilterRegistrationBean<AuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new AuthenticationFilter(tokenService));
-        registrationBean.addUrlPatterns("/protected/*", "/dashboard", "/test"); // Filter to protect endpoint
+        registrationBean.addUrlPatterns("/dashboard", "/test"); // Filter to protect endpoint
         return registrationBean;
     }
 }

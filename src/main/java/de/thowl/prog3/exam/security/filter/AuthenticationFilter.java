@@ -16,9 +16,6 @@ public class AuthenticationFilter extends HttpFilter {
 
     private final TokenService tokenService;
 
-    private SessionRepository sessionRepository;
-
-
     public AuthenticationFilter(TokenService tokenService) {
         this.tokenService = tokenService;
     }
