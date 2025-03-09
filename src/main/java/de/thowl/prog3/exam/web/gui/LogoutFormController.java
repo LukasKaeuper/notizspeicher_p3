@@ -2,6 +2,7 @@ package de.thowl.prog3.exam.web.gui;
 
 import de.thowl.prog3.exam.core.AuthenticationService;
 import de.thowl.prog3.exam.core.entities.AccessToken;
+import de.thowl.prog3.exam.storage.entities.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ public class LogoutFormController {
     public String logout(AccessToken token) {
         try {
             auth.logout(token);
+            Session.currentToken = null;
             return "redirect:/login";
         } catch (Exception e) {
             log.error("Logout failed", e);
