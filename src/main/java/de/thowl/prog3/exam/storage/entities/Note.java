@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Notiz {
+public class Note {
 
     @Id
     @GeneratedValue
