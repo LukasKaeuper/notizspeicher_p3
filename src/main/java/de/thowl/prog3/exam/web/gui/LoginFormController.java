@@ -51,6 +51,7 @@ public class LoginFormController {
             if (this.auth.isValid(username, password)) {
                 UserDTO userDTO = this.mapper.map(u);
                 session.setAttribute("user", userDTO);
+                session.setAttribute("userId", u.getId());
                 //model.addAttribute("user", this.mapper.map(u));
                 log.debug("User is valid, attempting to login");
                 auth.login(username, password);

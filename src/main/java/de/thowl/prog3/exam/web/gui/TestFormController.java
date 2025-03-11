@@ -9,8 +9,7 @@ public class TestFormController {
 
     @GetMapping("/test")
     public String showTestPage(Model model) {
-        // Add the user's name to the model
-        model.addAttribute("username", "User's Name"); // Replace with actual user name retrieval logic
+        model.addAttribute("username", "User's Name");
         return "test";
     }
 }
