@@ -87,7 +87,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         u.setPassword(password);
         log.debug("persisting user " + username + " to storage");
         Long uid = -1l;
-        User result = this.userstore.save(u); //Über Service machen
+        User result = this.userstore.save(u);
         if (result != null) {
             uid = result.getId();
         }

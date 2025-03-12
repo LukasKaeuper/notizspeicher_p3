@@ -29,6 +29,7 @@ public class Session {
 
     @NotNull
     private String token;
+
     private Long userId;
 
     public static String currentToken;

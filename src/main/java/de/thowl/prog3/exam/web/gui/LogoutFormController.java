@@ -21,11 +21,10 @@ public class LogoutFormController {
     public String logout(AccessToken token) {
         try {
             auth.logout(token);
-            Session.currentToken = null;
             return "redirect:/login";
         } catch (Exception e) {
             log.error("Logout failed", e);
-            return "error"; // or handle the error appropriately
+            return "error";
         }
     }
 
