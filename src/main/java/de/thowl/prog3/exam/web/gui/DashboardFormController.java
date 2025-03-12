@@ -1,9 +1,14 @@
 package de.thowl.prog3.exam.web.gui;
 
 import de.thowl.prog3.exam.service.NoteService;
+import de.thowl.prog3.exam.service.UserService;
 import de.thowl.prog3.exam.storage.entities.Note;
 import de.thowl.prog3.exam.web.dto.UserDTO;
+import de.thowl.prog3.exam.web.dto.NoteDTO;
+import de.thowl.prog3.exam.web.mapper.UserMapper;
+import de.thowl.prog3.exam.web.mapper.NoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -14,6 +19,10 @@ import java.util.List;
 
 @Controller
 public class DashboardFormController {
+
+    @Autowired
+    @Qualifier("notemapper")
+    private NoteMapper mapper = new NoteMapper();
 
     @Autowired
     private NoteService noteService;
