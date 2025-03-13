@@ -3,6 +3,7 @@ package de.thowl.prog3.exam.web.gui;
 import de.thowl.prog3.exam.service.NoteService;
 import de.thowl.prog3.exam.storage.entities.Note;
 import de.thowl.prog3.exam.web.dto.UserDTO;
+import de.thowl.prog3.exam.web.gui.form.NoteForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
@@ -33,11 +34,11 @@ public class DashboardFormController {
     }
 
     @PostMapping("/dashboard")
-    public String saveNote(String title, String content, HttpSession session) {
+    public String saveNote(NoteForm formdata, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         Note note = new Note();
-        note.setTitle(title);
-        note.setContent(content);
+        note.setTitle(formdata.getTitle());
+        note.setContent(formdata.getContent());
         note.setUserId(userId);
         noteService.saveNote(note);
         return "redirect:/dashboard";
