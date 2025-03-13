@@ -29,7 +29,7 @@ public class DashboardFormController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        return "dashboard";
+        return "/dashboard";
     }
 
     @PostMapping("/dashboard")

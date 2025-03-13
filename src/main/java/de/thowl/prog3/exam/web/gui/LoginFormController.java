@@ -1,6 +1,6 @@
 package de.thowl.prog3.exam.web.gui;
 
-import de.thowl.prog3.exam.core.AuthenticationService;
+import de.thowl.prog3.exam.security.AuthenticationService;
 import de.thowl.prog3.exam.web.dto.UserDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,31 +31,29 @@ public class LoginFormController {
     AuthenticationService auth;
 
     @GetMapping("/login")
-    public String showUserForm() {
+    public String showLoginForm() {
         log.debug("entering Login");
         return "login";
     }
 
     @PostMapping("/login")
-    public String processUserForm(Model model, UserForm formdata, HttpSession session) {
+    public String processLoginForm(Model model, UserForm formdata, HttpSession session) {
         log.debug("entering processLoginForm");
         String username = formdata.getUsername();
         String password = formdata.getPassword();
-        log.debug("searching for User={}", username);
-        log.debug("searching for Password={}", password);
-
-        // retrieve user record
         String target = "login"; // FAILURE LANE -> back to form page
         try {
-            User u = this.svc.getUserWithPassword(username, password);
             if (this.auth.isValid(username, password)) {
+                User u = this.svc.getUserWithPassword(username, password);
                 UserDTO userDTO = this.mapper.map(u);
                 session.setAttribute("user", userDTO);
                 session.setAttribute("userId", u.getId());
-                //model.addAttribute("user", this.mapper.map(u));
                 log.debug("User is valid, attempting to login");
                 auth.login(username, password);
                 target = "redirect:/dashboard"; // SUCCESS LANE
+            } else {
+                log.error("invalid user data");
+                model.addAttribute("message", "Benutzer nicht gefunden oder Passwort falsch!");
             }
         } catch (Exception e) {
             log.error("unable to retrieve user data");

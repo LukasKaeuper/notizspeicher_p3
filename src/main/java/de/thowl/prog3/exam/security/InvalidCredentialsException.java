@@ -1,4 +1,4 @@
-package de.thowl.prog3.exam.core;
+package de.thowl.prog3.exam.security;
 
 public class InvalidCredentialsException extends Exception {
 

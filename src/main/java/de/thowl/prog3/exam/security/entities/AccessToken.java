@@ -1,4 +1,4 @@
-package de.thowl.prog3.exam.core.entities;
+package de.thowl.prog3.exam.security.entities;
 
 import java.util.Date;
 
