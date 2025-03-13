@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import de.thowl.prog3.exam.service.UserService;
-import de.thowl.prog3.exam.storage.entities.User;
 import de.thowl.prog3.exam.web.gui.form.UserForm;
 import de.thowl.prog3.exam.web.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +43,9 @@ public class LoginFormController {
         String target = "login"; // FAILURE LANE -> back to form page
         try {
             if (this.auth.isValid(username, password)) {
-                User u = this.svc.getUserWithPassword(username, password);
-                UserDTO userDTO = this.mapper.map(u);
+                UserDTO userDTO = this.mapper.map(this.svc.getUserWithPassword(username, password));
                 session.setAttribute("user", userDTO);
-                session.setAttribute("userId", u.getId());
+                session.setAttribute("userId", userDTO.id());
                 log.debug("User is valid, attempting to login");
                 auth.login(username, password);
                 target = "redirect:/dashboard"; // SUCCESS LANE
