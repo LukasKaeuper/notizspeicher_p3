@@ -16,7 +16,7 @@ public class Note {
 
     @Id
     @GeneratedValue
-    private Long noteId;
+    private Long Id;
 
     private String title;
 

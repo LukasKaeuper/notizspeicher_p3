@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class NoteMapper {
 
     public NoteDTO map(de.thowl.prog3.exam.storage.entities.Note in) {
-        return new NoteDTO(in.getNoteId(), in.getTitle(), in.getContent(), in.getUserId());
+        return new NoteDTO(in.getId(), in.getTitle(), in.getContent());
     }
 }

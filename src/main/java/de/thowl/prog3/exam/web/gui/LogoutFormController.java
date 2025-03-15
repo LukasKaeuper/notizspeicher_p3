@@ -1,8 +1,9 @@
 package de.thowl.prog3.exam.web.gui;
 
-import de.thowl.prog3.exam.core.AuthenticationService;
-import de.thowl.prog3.exam.core.entities.AccessToken;
-import de.thowl.prog3.exam.storage.entities.Session;
+import de.thowl.prog3.exam.security.AuthenticationService;
+import de.thowl.prog3.exam.security.entities.AccessToken;
+import de.thowl.prog3.exam.service.SessionService;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,20 +18,24 @@ public class LogoutFormController {
     @Autowired
     private AuthenticationService auth;
 
+    @Autowired
+    private SessionService sessionService;
+
     @PostMapping("/logout")
     public String logout(AccessToken token) {
         try {
             auth.logout(token);
-            Session.currentToken = null;
+            sessionService.setCurrentToken(null);
             return "redirect:/login";
         } catch (Exception e) {
             log.error("Logout failed", e);
-            return "error"; // or handle the error appropriately
+            return "error";
         }
     }
 
     @GetMapping("/logout")
-    public String logout() {
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/login";
     }
 }

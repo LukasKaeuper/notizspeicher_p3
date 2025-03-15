@@ -1,14 +1,14 @@
-package de.thowl.prog3.exam.core;
+package de.thowl.prog3.exam.security;
 
-import de.thowl.prog3.exam.core.entities.AccessToken;
-import de.thowl.prog3.exam.storage.entities.User;
+import de.thowl.prog3.exam.security.entities.AccessToken;
 
 public interface AuthenticationService {
+
     boolean isValid(String username, String password);
 
     AccessToken login(String username, String password) throws InvalidCredentialsException;
 
     boolean logout(AccessToken acc);
 
-    Long register(String username, String email, String password);
+    void register(String username, String email, String password);
 }
