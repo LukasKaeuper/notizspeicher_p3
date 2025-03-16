@@ -1,12 +1,11 @@
 package de.thowl.prog3.exam.storage.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,11 +16,22 @@ public class Note {
 
     @Id
     @GeneratedValue
-    private Long Id;
+    private Long id;
 
     private String title;
 
     private String content;
 
     private long userId;
+
+    @ElementCollection
+    @CollectionTable(name = "my_tags", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "tags")
+    private List<String> tags;
+
+//    @ElementCollection
+//    private List<Note> subNotes;
+
+//    @ElementCollection
+//    private List<String> tags;
 }

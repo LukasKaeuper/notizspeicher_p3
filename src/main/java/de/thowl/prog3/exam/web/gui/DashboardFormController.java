@@ -4,7 +4,9 @@ import de.thowl.prog3.exam.service.NoteService;
 import de.thowl.prog3.exam.storage.entities.Note;
 import de.thowl.prog3.exam.web.dto.UserDTO;
 import de.thowl.prog3.exam.web.gui.form.NoteForm;
+import de.thowl.prog3.exam.web.mapper.NoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,10 @@ import java.util.List;
 public class DashboardFormController {
 
     @Autowired
+    @Qualifier("notemapper")
+    private NoteMapper noteMapper = new NoteMapper();
+
+    @Autowired
     private NoteService noteService;
 
     @GetMapping("/dashboard")
@@ -24,6 +30,7 @@ public class DashboardFormController {
         UserDTO user = (UserDTO) session.getAttribute("user");
         Long userId = (Long) session.getAttribute("userId");
         List<Note> notes = noteService.getNotesbyUser(userId);
+        notes.forEach(note -> {noteMapper.map(note);});
         model.addAttribute("notes", notes);
         model.addAttribute("user", user);
         if (user == null) {
@@ -33,14 +40,10 @@ public class DashboardFormController {
         return "/dashboard";
     }
 
-    @PostMapping("/dashboard")
+    @PostMapping("/addNote")
     public String saveNote(NoteForm formdata, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
-        Note note = new Note();
-        note.setTitle(formdata.getTitle());
-        note.setContent(formdata.getContent());
-        note.setUserId(userId);
-        noteService.saveNote(note);
+        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags());
         return "redirect:/dashboard";
     }
 }

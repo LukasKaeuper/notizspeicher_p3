@@ -21,10 +21,10 @@ public class LoginFormController {
 
     @Autowired
     @Qualifier("usermapper")
-    private UserMapper mapper = new UserMapper();
+    private UserMapper userMapper = new UserMapper();
 
     @Autowired
-    UserService svc;
+    UserService userService;
 
     @Autowired
     AuthenticationService auth;
@@ -43,7 +43,7 @@ public class LoginFormController {
         String target = "login"; // FAILURE LANE -> back to form page
         try {
             if (this.auth.isValid(username, password)) {
-                UserDTO userDTO = this.mapper.map(this.svc.getUserWithPassword(username, password));
+                UserDTO userDTO = this.userMapper.map(this.userService.getUserWithPassword(username, password));
                 session.setAttribute("user", userDTO);
                 session.setAttribute("userId", userDTO.id());
                 log.debug("User is valid, attempting to login");
