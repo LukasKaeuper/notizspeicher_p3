@@ -43,7 +43,20 @@ public class DashboardFormController {
     @PostMapping("/addNote")
     public String saveNote(NoteForm formdata, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
-        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags());
+        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags(), formdata.getCategory());
         return "redirect:/dashboard";
+    }
+
+    @PostMapping("/filter")
+    public String filter(NoteForm formdata, HttpSession session, Model model) {
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        Long userId = (Long) session.getAttribute("userId");
+        List<String> tags = formdata.getFilterTags();
+        String category = formdata.getFilterCategory();
+        List<Note> filteredNotes= noteService.filterNotes(userId, tags, category);
+        filteredNotes.forEach(note -> {noteMapper.map(note);});
+        model.addAttribute("notes", filteredNotes);
+        model.addAttribute("user", user);
+        return "dashboard";
     }
 }

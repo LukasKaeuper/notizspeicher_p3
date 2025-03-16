@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface NoteService {
 
-    void saveNote(String title, String content, Long userId, List<String> tags);
+    void saveNote(String title, String content, Long userId, List<String> tags, String category);
 
     List<Note> getNotesbyUser(long userId);
+
+    List<Note> filterNotes(Long userId, List<String> tags, String category);
 
     //void addTag(String tag, long userId);
 }

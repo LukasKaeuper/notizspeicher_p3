@@ -29,9 +29,8 @@ public class Note {
     @Column(name = "tags")
     private List<String> tags;
 
-//    @ElementCollection
-//    private List<Note> subNotes;
+    private String category;
 
 //    @ElementCollection
-//    private List<String> tags;
+//    private List<Note> subNotes;
 }
