@@ -15,7 +15,11 @@ public class NoteServiceImpl implements NoteService {
     private NoteRepository repository;
 
     @Override
-    public void saveNote(Note note) {
+    public void saveNote(String title, String content, Long userId) {
+        Note note = new Note();
+        note.setTitle(title);
+        note.setContent(content);
+        note.setUserId(userId);
         repository.save(note);
     }
 

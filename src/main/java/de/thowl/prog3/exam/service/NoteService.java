@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface NoteService {
 
-    void saveNote(Note note);
+    void saveNote(String title, String content, Long userId);
 
     List<Note> getNotesbyUser(long userId);
 }
