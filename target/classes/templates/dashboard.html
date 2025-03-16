@@ -31,7 +31,7 @@
     <h1>Dashboard - Willkommen, <span th:text="${user.username}">USER_NAME</span></h1>
 
     <div class="add-note">
-        <form action="/dashboard" method="post">
+        <form action="/addNote" method="post">
             <input type="text" name="title" placeholder="Title" required />
             <textarea name="content" placeholder="Content" required></textarea>
             <input type="text" name="tags" placeholder="Tags, mit Komma getrennt"/>
