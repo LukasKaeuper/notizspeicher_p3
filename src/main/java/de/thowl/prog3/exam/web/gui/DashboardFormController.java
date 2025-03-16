@@ -43,7 +43,7 @@ public class DashboardFormController {
     @PostMapping("/dashboard")
     public String saveNote(NoteForm formdata, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
-        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId);
+        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags());
         return "redirect:/dashboard";
     }
 }

@@ -15,11 +15,12 @@ public class NoteServiceImpl implements NoteService {
     private NoteRepository repository;
 
     @Override
-    public void saveNote(String title, String content, Long userId) {
+    public void saveNote(String title, String content, Long userId, List<String> tags) {
         Note note = new Note();
         note.setTitle(title);
         note.setContent(content);
         note.setUserId(userId);
+        note.setTags(tags);
         repository.save(note);
     }
 
@@ -27,4 +28,9 @@ public class NoteServiceImpl implements NoteService {
     public List<Note> getNotesbyUser(long userId) {
         return repository.findByUserId(userId);
     }
+
+//    @Override
+//    public void addTag(String tag, long userId) {
+//
+//    }
 }

@@ -24,7 +24,13 @@ public class Note {
 
     private long userId;
 
-    //private List<Note> subNotes;
+    @ElementCollection
+    @CollectionTable(name = "my_tags", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "tags")
+    private List<String> tags;
+
+//    @ElementCollection
+//    private List<Note> subNotes;
 
 //    @ElementCollection
 //    private List<String> tags;
