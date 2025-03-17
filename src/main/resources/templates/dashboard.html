@@ -35,6 +35,14 @@
             <input type="text" name="title" placeholder="Title" required />
             <textarea name="content" placeholder="Content" required></textarea>
             <input type="text" name="tags" placeholder="Tags, mit Komma getrennt"/>
+            <label>Category:</label>
+            <select name="category">
+                <option selected value='null'>No Category</option>
+                <option value="kategorie1">Kategorie1</option>
+                <option value="kategorie2">Kategorie2</option>
+                <option value="kategorie3">Kategorie3</option>
+                <option value="kategorie4">Kategorie4</option>
+            </select>
             <button type="submit">Add Note</button>
         </form>
     </div>
@@ -45,7 +53,25 @@
             <p class="note-title" th:text="${note.title}">Note Title</p>
             <p class="note-content" th:text="${note.content}">Note Content</p>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>
+            <p class="note-category" th:text="${note.category}">Note Category</p>
         </div>
+    </div>
+
+    <div>
+        <h2>Filter</h2>
+        <form action="/filter" method="post">
+            <input type="text" name="filterTags" placeholder="Tags, mit Komma getrennt"/>
+            <label>Category:</label>
+            <select name="filterCategory">
+                <option selected value='disabled'>Don't Filter</option>
+                <option value='null'>No Category</option>
+                <option value="kategorie1">Kategorie1</option>
+                <option value="kategorie2">Kategorie2</option>
+                <option value="kategorie3">Kategorie3</option>
+                <option value="kategorie4">Kategorie4</option>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
     </div>
 
     <h1>User details:</h1>
