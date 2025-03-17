@@ -33,15 +33,22 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory) {
+    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags) {
         List<Note> filteredNotes = new ArrayList<>();
         for (Note note : repository.findByUserId(userId)) {
-            if (filterTags.isEmpty() && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory())) ||
-                    !filterTags.isEmpty() && !Collections.disjoint(note.getTags(), filterTags) && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory()))){
-                filteredNotes.add(note);
-                //!Collections.disjoint(note.getTags(), filterTags)
-                //note.getTags().containsAll(filterTags)
+            if (mustContainAllTags){
+                if (filterTags.isEmpty() && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory())) ||
+                        !filterTags.isEmpty() && note.getTags().containsAll(filterTags) && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory()))){
+                    filteredNotes.add(note);
+                }
             }
+            else{
+                if (filterTags.isEmpty() && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory())) ||
+                        !filterTags.isEmpty() && !Collections.disjoint(note.getTags(), filterTags) && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory()))){
+                    filteredNotes.add(note);
+                }
+            }
+
         }
         return filteredNotes;
     }

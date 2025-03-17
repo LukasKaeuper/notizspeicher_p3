@@ -4,6 +4,7 @@ import de.thowl.prog3.exam.service.NoteService;
 import de.thowl.prog3.exam.storage.entities.Note;
 import de.thowl.prog3.exam.web.dto.NoteDTO;
 import de.thowl.prog3.exam.web.dto.UserDTO;
+import de.thowl.prog3.exam.web.gui.form.FilterForm;
 import de.thowl.prog3.exam.web.gui.form.NoteForm;
 import de.thowl.prog3.exam.web.mapper.NoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,14 +52,15 @@ public class DashboardFormController {
     }
 
     @PostMapping("/filter")
-    public String filter(NoteForm formdata, HttpSession session, Model model) {
+    public String filter(FilterForm formdata, HttpSession session, Model model) {
         UserDTO user = (UserDTO) session.getAttribute("user");
         Long userId = (Long) session.getAttribute("userId");
-        List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory());
+        List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags());
         List<NoteDTO> filteredNoteDTOs = new ArrayList<>();
         filteredNotes.forEach(note -> {filteredNoteDTOs.add(noteMapper.map(note));});
         model.addAttribute("notes", filteredNoteDTOs);
         model.addAttribute("user", user);
+        model.addAttribute("filter", formdata);
         return "/dashboard";
     }
 }

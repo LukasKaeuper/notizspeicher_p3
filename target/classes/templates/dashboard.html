@@ -60,16 +60,18 @@
     <div>
         <h2>Filter</h2>
         <form action="/filter" method="post">
-            <input type="text" name="filterTags" placeholder="Tags, mit Komma getrennt"/>
-            <label>Category:</label>
-            <select name="filterCategory">
+            <input type="text" name="filterTags" placeholder="Tags, mit Komma getrennt" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
+            <input type="checkbox" name="mustContainAllTags" id="mustContainAllTags" th:checked="${filter?.mustContainAllTags}">
+            <label for="mustContainAllTags">Must contain all tags</label><br><br>
+            <label for="category">Category:</label>
+            <select id="category" name="filterCategory" th:selected="${filter?.filterCategory}">
                 <option selected value='disabled'>Don't Filter</option>
                 <option value='null'>No Category</option>
                 <option value="kategorie1">Kategorie1</option>
                 <option value="kategorie2">Kategorie2</option>
                 <option value="kategorie3">Kategorie3</option>
                 <option value="kategorie4">Kategorie4</option>
-            </select>
+            </select><br><br>
             <button type="submit">Filter</button>
         </form>
     </div>
