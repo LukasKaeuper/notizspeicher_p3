@@ -1,5 +1,6 @@
 package de.thowl.prog3.exam.storage.entities;
 
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,11 +26,14 @@ public class Note {
     private long userId;
 
     @ElementCollection
-    @CollectionTable(name = "my_tags", joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "my_tags", joinColumns = @JoinColumn(name = "noteId"))
     @Column(name = "tags")
     private List<String> tags;
 
-    private String category;
+    @Nullable
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 //    @ElementCollection
 //    private List<Note> subNotes;

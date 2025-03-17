@@ -2,7 +2,6 @@ package de.thowl.prog3.exam.web.gui.form;
 
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

@@ -1,7 +1,9 @@
 package de.thowl.prog3.exam.service.impl;
 
+import de.thowl.prog3.exam.service.CategoryService;
 import de.thowl.prog3.exam.storage.entities.Note;
 import de.thowl.prog3.exam.service.NoteService;
+import de.thowl.prog3.exam.storage.repositories.CategoryRepository;
 import de.thowl.prog3.exam.storage.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,17 @@ public class NoteServiceImpl implements NoteService {
     @Autowired
     private NoteRepository repository;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @Override
-    public void saveNote(String title, String content, Long userId, List<String> tags, String category) {
+    public void saveNote(String title, String content, Long userId, List<String> tags, String categoryName) {
         Note note = new Note();
         note.setTitle(title);
         note.setContent(content);
         note.setUserId(userId);
         note.setTags(tags);
-        note.setCategory(category);
+        note.setCategory(categoryService.getCategory(categoryName));
         repository.save(note);
     }
 

@@ -1,11 +1,16 @@
 package de.thowl.prog3.exam.web.gui;
 
+import de.thowl.prog3.exam.service.CategoryService;
 import de.thowl.prog3.exam.service.NoteService;
+import de.thowl.prog3.exam.storage.entities.Category;
 import de.thowl.prog3.exam.storage.entities.Note;
+import de.thowl.prog3.exam.web.dto.CategoryDTO;
 import de.thowl.prog3.exam.web.dto.NoteDTO;
 import de.thowl.prog3.exam.web.dto.UserDTO;
+import de.thowl.prog3.exam.web.gui.form.CategoryForm;
 import de.thowl.prog3.exam.web.gui.form.FilterForm;
 import de.thowl.prog3.exam.web.gui.form.NoteForm;
+import de.thowl.prog3.exam.web.mapper.CategoryMapper;
 import de.thowl.prog3.exam.web.mapper.NoteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,7 +31,14 @@ public class DashboardFormController {
     private NoteMapper noteMapper = new NoteMapper();
 
     @Autowired
+    @Qualifier("categorymapper")
+    private CategoryMapper categoryMapper = new CategoryMapper();
+
+    @Autowired
     private NoteService noteService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("/dashboard")
     public String showDashboard(HttpSession session, Model model) {
@@ -35,12 +47,15 @@ public class DashboardFormController {
         List<Note> notes = noteService.getNotesByUser(userId);
         List<NoteDTO> noteDTOs = new ArrayList<>();
         notes.forEach(note -> {noteDTOs.add(noteMapper.map(note));});
+        List<Category> categories = categoryService.getCategoriesByUser(userId);
+        List<CategoryDTO> categoryDTOs = new ArrayList<>();
+        categories.forEach(category -> categoryDTOs.add(categoryMapper.map(category)));
         model.addAttribute("notes", noteDTOs);
         model.addAttribute("user", user);
+        model.addAttribute("categories", categoryDTOs);
         if (user == null) {
             return "redirect:/login";
         }
-        model.addAttribute("user", user);
         return "/dashboard";
     }
 
@@ -58,9 +73,20 @@ public class DashboardFormController {
         List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags());
         List<NoteDTO> filteredNoteDTOs = new ArrayList<>();
         filteredNotes.forEach(note -> {filteredNoteDTOs.add(noteMapper.map(note));});
+        List<Category> categories = categoryService.getCategoriesByUser(userId);
+        List<CategoryDTO> categoryDTOs = new ArrayList<>();
+        categories.forEach(category -> categoryDTOs.add(categoryMapper.map(category)));
         model.addAttribute("notes", filteredNoteDTOs);
         model.addAttribute("user", user);
         model.addAttribute("filter", formdata);
+        model.addAttribute("categories", categoryDTOs);
         return "/dashboard";
+    }
+
+    @PostMapping("/addCategory")
+    public String addCategory(CategoryForm formdata, HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        categoryService.saveCategory(formdata.getCategoryName(), userId);
+        return "redirect:/dashboard";
     }
 }
