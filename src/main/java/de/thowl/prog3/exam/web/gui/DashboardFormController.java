@@ -31,7 +31,7 @@ public class DashboardFormController {
     public String showDashboard(HttpSession session, Model model) {
         UserDTO user = (UserDTO) session.getAttribute("user");
         Long userId = (Long) session.getAttribute("userId");
-        List<Note> notes = noteService.getNotesbyUser(userId);
+        List<Note> notes = noteService.getNotesByUser(userId);
         List<NoteDTO> noteDTOs = new ArrayList<>();
         notes.forEach(note -> {noteDTOs.add(noteMapper.map(note));});
         model.addAttribute("notes", noteDTOs);
