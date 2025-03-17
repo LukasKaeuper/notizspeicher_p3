@@ -26,20 +26,35 @@ public class RegisterFormController {
 
     @PostMapping("/register")
     public String registerUser(Model model, UserForm formdata) {
-        if (formdata.getUsername().length() < 5 || formdata.getPassword().length() < 5) {
-            log.error("validation error");
-            model.addAttribute("errorMessage", "Fehler bei der Eingabe!, mindesens 5 Zeichen");
-            return "register";
-        }
-        try {
-            auth.register(formdata.getUsername(), formdata.getEmail(), formdata.getPassword());
-            model.addAttribute("message", "Benutzer wurde erfolgreich registriert!");
-
-        } catch (Exception e) {
-            log.error("Registration failed", e);
-            model.addAttribute("errorMessage", "Registrierung fehlgeschlagen!");
-            return "register";
+        switch (auth.register(formdata.getUsername(), formdata.getEmail(), formdata.getPassword())) {
+            case "validation error":
+                model.addAttribute("errorMessage", "Fehler bei der Eingabe!, mindesens 5 Zeichen");
+                break;
+            case "user registered":
+                model.addAttribute("message", "Benutzer wurde erfolgreich registriert!");
+                break;
+            case "registration failed":
+                model.addAttribute("errorMessage", "Registrierung fehlgeschlagen!");
+                break;
         }
         return "register";
+
+
+//        if (formdata.getUsername().length() < 5 || formdata.getPassword().length() < 5) {
+//            log.error("validation error");
+//            model.addAttribute("errorMessage", "Fehler bei der Eingabe!, mindesens 5 Zeichen");
+//            return "register";
+//        }
+//        try {
+//            auth.register(formdata.getUsername(), formdata.getEmail(), formdata.getPassword());
+//            model.addAttribute("message", "Benutzer wurde erfolgreich registriert!");
+//
+//        } catch (Exception e) {
+//            log.error("Registration failed", e);
+//            model.addAttribute("errorMessage", "Registrierung fehlgeschlagen!");
+//            return "register";
+//        }
+//        return "register";
+//        return "";
     }
 }

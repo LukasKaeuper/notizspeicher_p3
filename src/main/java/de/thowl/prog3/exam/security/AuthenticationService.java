@@ -10,5 +10,5 @@ public interface AuthenticationService {
 
     boolean logout(AccessToken acc);
 
-    void register(String username, String email, String password);
+    String register(String username, String email, String password);
 }

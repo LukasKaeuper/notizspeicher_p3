@@ -69,12 +69,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void register(String username, String email, String password) {
+    public String register(String username, String email, String password) {
         log.debug("entering register");
-        User u = new User();
-        u.setName(username);
-        u.setEmail(email);
-        u.setPassword(password);
-        userService.saveUser(u);
+        if (username.length() < 5 || password.length() < 5){
+            log.error("validation error");
+            return "validation error";
+        }
+        try {
+            User u = new User();
+            u.setName(username);
+            u.setEmail(email);
+            u.setPassword(password);
+            userService.saveUser(u);
+            return "user registered";
+        } catch (Exception e) {
+            log.error("Registration failed", e);
+            return "registration failed";
+        }
     }
 }
