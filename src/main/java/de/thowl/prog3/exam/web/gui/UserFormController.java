@@ -42,7 +42,7 @@ public class UserFormController {
         // retrieve user record
         String target = "login"; // FAILURE LANE -> back to form page
         try {
-            User u = this.svc.getUserWithPassword(username, password);
+            User u = this.svc.getUser(username);
             if (u != null) {
                 model.addAttribute("user", this.mapper.map(u));
                 target = "dashboard"; // SUCCESS LANE

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class WebConfig {
 
-    @Bean
+    @Bean(name = "authenticationFilter")
     public FilterRegistrationBean<AuthenticationFilter> authenticationFilter(SessionService sessionService) {
         FilterRegistrationBean<AuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new AuthenticationFilter(sessionService));

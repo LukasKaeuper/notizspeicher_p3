@@ -43,7 +43,7 @@ public class LoginFormController {
         String target = "login"; // FAILURE LANE -> back to form page
         try {
             if (this.auth.isValid(username, password)) {
-                UserDTO userDTO = this.userMapper.map(this.userService.getUserWithPassword(username, password));
+                UserDTO userDTO = this.userMapper.map(this.userService.getUser(username));
                 session.setAttribute("user", userDTO);
                 session.setAttribute("userId", userDTO.id());
                 log.debug("User is valid, attempting to login");

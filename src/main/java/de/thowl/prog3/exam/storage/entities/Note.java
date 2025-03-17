@@ -24,7 +24,7 @@ public class Note {
 
     private long userId;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER) // Sammlung soll immer geladen werden
     @CollectionTable(name = "my_tags", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "tags")
     private List<String> tags;

@@ -38,13 +38,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserWithPassword(String name, String password) {
-        log.debug("entering getUser(name={}, password={})", name, password);
-        Optional<User> result = this.repository.findUserByNameAndPassword(name, password);
-        return result.orElseThrow(IllegalArgumentException::new);
-    }
-
-    @Override
     public List<User> getAllUsers() {
         log.debug("entering getAllUsers()");
         ArrayList<User> result = new ArrayList<>();

@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -26,6 +25,15 @@ public class TestUserService {
 
     @Test
     @DisplayName("Should not throw an exception")
+    public void testGetUserById() {
+        log.debug("entering testGetUserById");
+        assertDoesNotThrow(() -> {
+            this.svc.getUser(1);
+        });
+    }
+
+    @Test
+    @DisplayName("Should not throw an exception")
     public void testGetUser() {
         log.debug("entering testGetUser");
         assertDoesNotThrow(() -> {
@@ -40,5 +48,19 @@ public class TestUserService {
         List<User> allUsers = this.svc.getAllUsers();
         assertNotNull(allUsers, "List of all users should not be a null reference");
         assertFalse(allUsers.size() == 0, "List of all users should not be empty");
+    }
+
+    @Test
+    @DisplayName("Should not throw an exception")
+    public void testSaveUser() {
+        log.debug("entering testSaveUser");
+        User u = User.builder()
+                .name("tester")
+                .email("tester@mail.com")
+                .password("test123")
+                .build();
+        assertDoesNotThrow(() -> {
+            this.svc.saveUser(u);
+        });
     }
 }
