@@ -43,5 +43,9 @@ class TestNoteRepository {
         log.info("Starting testFindByUserId");
         List<Note> notes = noteRepository.findByUserId(4);
         assertEquals("testTitle", notes.get(0).getTitle(), "Title is wrong");
+        assertEquals("testContent", notes.get(0).getContent(), "Content is wrong");
+        assertEquals(4, notes.get(0).getUserId(), "UserID is wrong");
+        assertEquals(List.of("testTag1", "testTag2"), notes.get(0).getTags(), "Tags are wrong");
+        assertEquals("testCategory", notes.get(0).getCategory(), "Category is wrong");
     }
 }
