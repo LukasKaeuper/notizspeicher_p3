@@ -45,11 +45,10 @@
             <input type="text" name="tags" placeholder="Tags, mit Komma getrennt"/>
             <label>Category:</label>
             <select name="category">
-                <option selected value='null'>No Category</option>
+                <option selected value=''>No Category</option>
                 <option th:each="category : ${categories}"
                         th:value="${category.categoryName}"
-                        th:text="${category.categoryName}"
-                        th:selected="${category.categoryName}"></option>
+                        th:text="${category.categoryName}"></option>
             </select>
             <button type="submit">Add Note</button>
         </form>
@@ -67,20 +66,21 @@
 
     <div>
         <h2>Filter</h2>
-        <form action="/filter" method="post">
+        <form method="post">
             <input type="text" name="filterTags" placeholder="Tags, mit Komma getrennt" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
             <input type="checkbox" name="mustContainAllTags" id="mustContainAllTags" th:checked="${filter?.mustContainAllTags}">
             <label for="mustContainAllTags">Must contain all tags</label><br><br>
             <label for="filterCategory">Category:</label>
             <select id="filterCategory" name="filterCategory">
                 <option selected value='disabled'>Don't Filter</option>
-                <option value='null'>No Category</option>
-                <option th:each="category : ${categories}"
-                        th:value="${category.categoryName}"
-                        th:text="${category.categoryName}"
-                        th:selected="${category.categoryName}"></option>
+                <option value=''>No Category</option>
+                <option th:each="choice : ${categories}"
+                        th:value="${choice.categoryName}"
+                        th:text="${choice.categoryName}"
+                        th:selected="(${choice.id} == *{lastFilterCategory?.id})"></option>
             </select><br><br>
-            <button type="submit">Filter</button>
+            <button type="submit" formaction="/filter">Filter</button>
+            <button type="submit" formaction="/resetFilter">Reset Filter</button>
         </form>
     </div>
 

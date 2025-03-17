@@ -3,7 +3,6 @@ package de.thowl.prog3.exam.service.impl;
 import de.thowl.prog3.exam.service.CategoryService;
 import de.thowl.prog3.exam.storage.entities.Note;
 import de.thowl.prog3.exam.service.NoteService;
-import de.thowl.prog3.exam.storage.repositories.CategoryRepository;
 import de.thowl.prog3.exam.storage.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,12 @@ public class NoteServiceImpl implements NoteService {
         note.setContent(content);
         note.setUserId(userId);
         note.setTags(tags);
-        note.setCategory(categoryService.getCategory(categoryName));
+        if (!categoryName.isEmpty()) {
+            note.setCategory(categoryService.getCategory(categoryName));
+        }
+        else {
+            note.setCategory(null);
+        }
         repository.save(note);
     }
 
@@ -42,24 +46,18 @@ public class NoteServiceImpl implements NoteService {
         List<Note> filteredNotes = new ArrayList<>();
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
-                if (filterTags.isEmpty() && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory())) ||
-                        !filterTags.isEmpty() && note.getTags().containsAll(filterTags) && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory()))){
+                if ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
+                        (!filterTags.isEmpty() && note.getTags().containsAll(filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty()))) {
                     filteredNotes.add(note);
                 }
             }
             else{
-                if (filterTags.isEmpty() && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory())) ||
-                        !filterTags.isEmpty() && !Collections.disjoint(note.getTags(), filterTags) && (filterCategory.equals("disabled") || filterCategory.equals(note.getCategory()))){
+                if ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
+                        (!filterTags.isEmpty() && !Collections.disjoint(note.getTags(), filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty()))) {
                     filteredNotes.add(note);
                 }
             }
-
         }
         return filteredNotes;
     }
-
-//    @Override
-//    public void addTag(String tag, long userId) {
-//
-//    }
 }

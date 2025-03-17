@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 public class CategoryMapper {
 
     public CategoryDTO map(de.thowl.prog3.exam.storage.entities.Category in){
-        return new CategoryDTO(in.getCategoryName());
+        if (in == null) return null;
+        return new CategoryDTO(in.getId(), in.getCategoryName());
     }
 }

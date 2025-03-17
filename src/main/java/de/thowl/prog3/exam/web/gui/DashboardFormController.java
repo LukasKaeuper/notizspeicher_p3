@@ -19,10 +19,12 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class DashboardFormController {
 
@@ -63,6 +65,7 @@ public class DashboardFormController {
     public String saveNote(NoteForm formdata, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags(), formdata.getCategory());
+        log.debug(formdata.toString());
         return "redirect:/dashboard";
     }
 
@@ -76,11 +79,21 @@ public class DashboardFormController {
         List<Category> categories = categoryService.getCategoriesByUser(userId);
         List<CategoryDTO> categoryDTOs = new ArrayList<>();
         categories.forEach(category -> categoryDTOs.add(categoryMapper.map(category)));
+        CategoryDTO lastFilterCategory = categoryMapper.map(categoryService.getCategory(formdata.getFilterCategory()));
         model.addAttribute("notes", filteredNoteDTOs);
         model.addAttribute("user", user);
         model.addAttribute("filter", formdata);
         model.addAttribute("categories", categoryDTOs);
+        model.addAttribute("lastFilterCategory", lastFilterCategory);
+        log.debug(formdata.toString());
+        log.debug(filteredNoteDTOs.toString());
+        log.debug(categoryDTOs.toString());
         return "/dashboard";
+    }
+
+    @PostMapping("/resetFilter")
+    public String resetFilter(HttpSession session, Model model) {
+        return "redirect:/dashboard";
     }
 
     @PostMapping("/addCategory")
