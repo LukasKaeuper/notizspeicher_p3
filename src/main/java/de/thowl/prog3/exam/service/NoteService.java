@@ -10,7 +10,7 @@ public interface NoteService {
 
     List<Note> getNotesbyUser(long userId);
 
-    List<Note> filterNotes(Long userId, List<String> tags, String category);
+    List<Note> getFilteredNotes(Long userId, List<String> tags, String category);
 
     //void addTag(String tag, long userId);
 }
