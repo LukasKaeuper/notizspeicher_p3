@@ -40,7 +40,7 @@ public class TestSessionService {
     }
 
     private User createTestUser() {
-        User user = new User();
+        user = new User();
         user.setName("testUser");
         user.setEmail("testUser@example.com");
         user.setPassword("testPassword");
@@ -48,7 +48,7 @@ public class TestSessionService {
         return user;
     }
     private Session createTestSession(User user) {
-        Session session = new Session();
+        session = new Session();
         session.setToken("testToken");
         session.setCreatedAt(new Date());
         session.setUserId(user.getId());
