@@ -9,16 +9,18 @@
             padding: 10px;
             margin: 10px;
             width: 200px;
-            height: 150px;
+            height: 200px;
             display: inline-block;
             vertical-align: top;
-            background-color: #f9f9a9;
+            /*background-color: #f9f9a9;*/
         }
         .note-title {
             font-weight: bold;
+            font-family: "Comic Sans MS";
         }
         .note-content {
             margin-top: 10px;
+            font-family: "Comic Sans MS";
         }
         .add-note {
             margin: 20px 0;
@@ -33,6 +35,7 @@
     <div>
         <form action="/addCategory" method="post">
             <input type="text" name="categoryName" placeholder="New Category" required/>
+            <input type="color" name="categoryColour" value="#f9f9a9"/>
             <button type="submit">Add Category</button>
         </form>
 
@@ -42,7 +45,7 @@
         <form action="/addNote" method="post">
             <input type="text" name="title" placeholder="Title" required/>
             <textarea name="content" placeholder="Content" required></textarea>
-            <input type="text" name="tags" placeholder="Tags, mit Komma getrennt"/>
+            <input type="text" name="tags" placeholder="Tags, divided by comma"/>
             <label>Category:</label>
             <select name="category">
                 <option selected value=''>No Category</option>
@@ -56,29 +59,38 @@
 
     <div>
         <h2>Your Notes</h2>
-        <div th:each="note : ${notes}" class="note">
+        <div th:each="note : ${notes}" class="note" th:style="${'background: ' + note.categoryColour()}">
             <p class="note-title" th:text="${note.title}">Note Title</p>
             <p class="note-content" th:text="${note.content}">Note Content</p>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>
             <p class="note-category" th:text="${note.category}">Note Category</p>
+            <p class="note-createdAt" th:text="${note.createdAt}">Note Creation Time</p>
         </div>
     </div>
 
     <div>
         <h2>Filter</h2>
         <form method="post">
-            <input type="text" name="filterTags" placeholder="Tags, mit Komma getrennt" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
+            <input type="text" name="filterTags" placeholder="Tags, divided by comma" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
             <input type="checkbox" name="mustContainAllTags" id="mustContainAllTags" th:checked="${filter?.mustContainAllTags}">
             <label for="mustContainAllTags">Must contain all tags</label><br><br>
             <label for="filterCategory">Category:</label>
             <select id="filterCategory" name="filterCategory">
                 <option selected value='disabled'>Don't Filter</option>
-                <option value=''>No Category</option>
+                <option th:selected="${lastFilterCategory} == ''" value=''>No Category</option>
                 <option th:each="choice : ${categories}"
                         th:value="${choice.categoryName}"
                         th:text="${choice.categoryName}"
                         th:selected="(${choice.id} == *{lastFilterCategory?.id})"></option>
             </select><br><br>
+            <label for="filterDateType">Date:</label>
+            <select id="filterDateType" name="filterDateType">
+                <option selected value="disabled">Don't Filter</option>
+                <option th:selected="${lastFilterDateType} == 'before'" value="before">Before:</option>
+                <option th:selected="${lastFilterDateType} == 'after'" value="after">After:</option>
+            </select>
+            <input type="datetime-local" name="filterDate" th:value="${filter?.filterDate}">
+            <br><br>
             <button type="submit" formaction="/filter">Filter</button>
             <button type="submit" formaction="/resetFilter">Reset Filter</button>
         </form>

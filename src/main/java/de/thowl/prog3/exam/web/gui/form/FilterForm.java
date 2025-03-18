@@ -9,4 +9,6 @@ public class FilterForm {
     private List<String> filterTags;
     private String filterCategory;
     private boolean mustContainAllTags;
+    private String filterDateType;
+    private String filterDate;
 }

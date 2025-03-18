@@ -14,10 +14,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public void saveCategory(String categoryName, Long userId) {
+    public void saveCategory(String categoryName, Long userId, String categoryColour) {
         Category category = new Category();
         category.setCategoryName(categoryName);
         category.setUserId(userId);
+        category.setCategoryColour(categoryColour);
         categoryRepository.save(category);
     }
 

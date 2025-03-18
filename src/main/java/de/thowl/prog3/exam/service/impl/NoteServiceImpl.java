@@ -7,6 +7,7 @@ import de.thowl.prog3.exam.storage.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ public class NoteServiceImpl implements NoteService {
         note.setContent(content);
         note.setUserId(userId);
         note.setTags(tags);
+        note.setCreatedAt(LocalDateTime.now());
         if (!categoryName.isEmpty()) {
             note.setCategory(categoryService.getCategory(categoryName));
         }
@@ -42,8 +44,9 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags) {
+    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate) {
         List<Note> filteredNotes = new ArrayList<>();
+
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
                 if ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
@@ -58,6 +61,14 @@ public class NoteServiceImpl implements NoteService {
                 }
             }
         }
+//        switch(filterDateType){
+//            case "before":
+//                return filteredNotes;
+//            case "after":
+//                return filteredNotes;
+//            default:
+//                return filteredNotes;
+//        }
         return filteredNotes;
     }
 }

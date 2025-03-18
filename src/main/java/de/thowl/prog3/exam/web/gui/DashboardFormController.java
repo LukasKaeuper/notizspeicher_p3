@@ -73,18 +73,20 @@ public class DashboardFormController {
     public String filter(FilterForm formdata, HttpSession session, Model model) {
         UserDTO user = (UserDTO) session.getAttribute("user");
         Long userId = (Long) session.getAttribute("userId");
-        List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags());
+        List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags(), formdata.getFilterDateType(), formdata.getFilterDate());
         List<NoteDTO> filteredNoteDTOs = new ArrayList<>();
         filteredNotes.forEach(note -> {filteredNoteDTOs.add(noteMapper.map(note));});
         List<Category> categories = categoryService.getCategoriesByUser(userId);
         List<CategoryDTO> categoryDTOs = new ArrayList<>();
         categories.forEach(category -> categoryDTOs.add(categoryMapper.map(category)));
         CategoryDTO lastFilterCategory = categoryMapper.map(categoryService.getCategory(formdata.getFilterCategory()));
+        String lastFilterDateType = formdata.getFilterDateType();
         model.addAttribute("notes", filteredNoteDTOs);
         model.addAttribute("user", user);
         model.addAttribute("filter", formdata);
         model.addAttribute("categories", categoryDTOs);
         model.addAttribute("lastFilterCategory", lastFilterCategory);
+        model.addAttribute("lastFilterDateType", lastFilterDateType);
         log.debug(formdata.toString());
         log.debug(filteredNoteDTOs.toString());
         log.debug(categoryDTOs.toString());
@@ -99,7 +101,7 @@ public class DashboardFormController {
     @PostMapping("/addCategory")
     public String addCategory(CategoryForm formdata, HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
-        categoryService.saveCategory(formdata.getCategoryName(), userId);
+        categoryService.saveCategory(formdata.getCategoryName(), userId, formdata.getCategoryColour());
         return "redirect:/dashboard";
     }
 }
