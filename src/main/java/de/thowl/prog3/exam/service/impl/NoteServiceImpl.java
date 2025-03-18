@@ -7,6 +7,7 @@ import de.thowl.prog3.exam.storage.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ public class NoteServiceImpl implements NoteService {
         note.setContent(content);
         note.setUserId(userId);
         note.setTags(tags);
+        note.setCreatedAt(LocalDateTime.now());
         if (!categoryName.isEmpty()) {
             note.setCategory(categoryService.getCategory(categoryName));
         }

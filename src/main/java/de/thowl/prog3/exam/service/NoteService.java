@@ -12,5 +12,4 @@ public interface NoteService {
 
     List<Note> getFilteredNotes(Long userId, List<String> tags, String category, boolean mustContainAllTags);
 
-    //void addTag(String tag, long userId);
 }

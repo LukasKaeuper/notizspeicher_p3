@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -34,6 +35,8 @@ public class Note {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    private LocalDateTime createdAt;
 
 //    @ElementCollection
 //    private List<Note> subNotes;

@@ -9,7 +9,7 @@
             padding: 10px;
             margin: 10px;
             width: 200px;
-            height: 150px;
+            height: 200px;
             display: inline-block;
             vertical-align: top;
             /*background-color: #f9f9a9;*/
@@ -64,6 +64,7 @@
             <p class="note-content" th:text="${note.content}">Note Content</p>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>
             <p class="note-category" th:text="${note.category}">Note Category</p>
+            <p class="note-createdAt" th:text="${note.createdAt}">Note Creation Time</p>
         </div>
     </div>
 
