@@ -99,7 +99,7 @@ public class DashboardFormController {
     @PostMapping("/addCategory")
     public String addCategory(CategoryForm formdata, HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
-        categoryService.saveCategory(formdata.getCategoryName(), userId);
+        categoryService.saveCategory(formdata.getCategoryName(), userId, formdata.getCategoryColour());
         return "redirect:/dashboard";
     }
 }

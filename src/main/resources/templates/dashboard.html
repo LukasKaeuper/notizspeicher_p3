@@ -12,13 +12,15 @@
             height: 150px;
             display: inline-block;
             vertical-align: top;
-            background-color: #f9f9a9;
+            /*background-color: #f9f9a9;*/
         }
         .note-title {
             font-weight: bold;
+            font-family: "Comic Sans MS";
         }
         .note-content {
             margin-top: 10px;
+            font-family: "Comic Sans MS";
         }
         .add-note {
             margin: 20px 0;
@@ -33,6 +35,7 @@
     <div>
         <form action="/addCategory" method="post">
             <input type="text" name="categoryName" placeholder="New Category" required/>
+            <input type="color" name="categoryColour" value="#f9f9a9"/>
             <button type="submit">Add Category</button>
         </form>
 
@@ -56,7 +59,7 @@
 
     <div>
         <h2>Your Notes</h2>
-        <div th:each="note : ${notes}" class="note">
+        <div th:each="note : ${notes}" class="note" th:style="${'background: ' + note.categoryColour()}">
             <p class="note-title" th:text="${note.title}">Note Title</p>
             <p class="note-content" th:text="${note.content}">Note Content</p>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>

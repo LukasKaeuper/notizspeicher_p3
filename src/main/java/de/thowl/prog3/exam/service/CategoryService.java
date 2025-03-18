@@ -10,5 +10,5 @@ public interface CategoryService {
 
     List<Category> getCategoriesByUser(Long userId);
 
-    void saveCategory(String categoryName, Long userId);
+    void saveCategory(String categoryName, Long userId, String categoryColour);
 }
