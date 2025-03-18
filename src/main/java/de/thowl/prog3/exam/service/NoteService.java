@@ -10,6 +10,6 @@ public interface NoteService {
 
     List<Note> getNotesByUser(long userId);
 
-    List<Note> getFilteredNotes(Long userId, List<String> tags, String category, boolean mustContainAllTags);
+    List<Note> getFilteredNotes(Long userId, List<String> tags, String category, boolean mustContainAllTags, String filterDateType, String filterDate);
 
 }

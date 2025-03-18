@@ -44,8 +44,9 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags) {
+    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate) {
         List<Note> filteredNotes = new ArrayList<>();
+
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
                 if ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
@@ -60,6 +61,14 @@ public class NoteServiceImpl implements NoteService {
                 }
             }
         }
+//        switch(filterDateType){
+//            case "before":
+//                return filteredNotes;
+//            case "after":
+//                return filteredNotes;
+//            default:
+//                return filteredNotes;
+//        }
         return filteredNotes;
     }
 }

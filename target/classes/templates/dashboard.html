@@ -45,7 +45,7 @@
         <form action="/addNote" method="post">
             <input type="text" name="title" placeholder="Title" required/>
             <textarea name="content" placeholder="Content" required></textarea>
-            <input type="text" name="tags" placeholder="Tags, mit Komma getrennt"/>
+            <input type="text" name="tags" placeholder="Tags, divided by comma"/>
             <label>Category:</label>
             <select name="category">
                 <option selected value=''>No Category</option>
@@ -71,18 +71,26 @@
     <div>
         <h2>Filter</h2>
         <form method="post">
-            <input type="text" name="filterTags" placeholder="Tags, mit Komma getrennt" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
+            <input type="text" name="filterTags" placeholder="Tags, divided by comma" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
             <input type="checkbox" name="mustContainAllTags" id="mustContainAllTags" th:checked="${filter?.mustContainAllTags}">
             <label for="mustContainAllTags">Must contain all tags</label><br><br>
             <label for="filterCategory">Category:</label>
             <select id="filterCategory" name="filterCategory">
                 <option selected value='disabled'>Don't Filter</option>
-                <option value=''>No Category</option>
+                <option th:selected="${lastFilterCategory} == ''" value=''>No Category</option>
                 <option th:each="choice : ${categories}"
                         th:value="${choice.categoryName}"
                         th:text="${choice.categoryName}"
                         th:selected="(${choice.id} == *{lastFilterCategory?.id})"></option>
             </select><br><br>
+            <label for="filterDateType">Date:</label>
+            <select id="filterDateType" name="filterDateType">
+                <option selected value="disabled">Don't Filter</option>
+                <option th:selected="${lastFilterDateType} == 'before'" value="before">Before:</option>
+                <option th:selected="${lastFilterDateType} == 'after'" value="after">After:</option>
+            </select>
+            <input type="datetime-local" name="filterDate" th:value="${filter?.filterDate}">
+            <br><br>
             <button type="submit" formaction="/filter">Filter</button>
             <button type="submit" formaction="/resetFilter">Reset Filter</button>
         </form>
