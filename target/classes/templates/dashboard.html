@@ -30,18 +30,25 @@
     <img th:src="@{/img/thowl_logo.png}" />
     <h1>Dashboard - Willkommen, <span th:text="${user.username}">USER_NAME</span></h1>
 
+    <div>
+        <form action="/addCategory" method="post">
+            <input type="text" name="categoryName" placeholder="New Category" required/>
+            <button type="submit">Add Category</button>
+        </form>
+
+    </div>
+
     <div class="add-note">
         <form action="/addNote" method="post">
-            <input type="text" name="title" placeholder="Title" required />
+            <input type="text" name="title" placeholder="Title" required/>
             <textarea name="content" placeholder="Content" required></textarea>
             <input type="text" name="tags" placeholder="Tags, mit Komma getrennt"/>
             <label>Category:</label>
             <select name="category">
-                <option selected value='null'>No Category</option>
-                <option value="kategorie1">Kategorie1</option>
-                <option value="kategorie2">Kategorie2</option>
-                <option value="kategorie3">Kategorie3</option>
-                <option value="kategorie4">Kategorie4</option>
+                <option selected value=''>No Category</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.categoryName}"
+                        th:text="${category.categoryName}"></option>
             </select>
             <button type="submit">Add Note</button>
         </form>
@@ -59,18 +66,21 @@
 
     <div>
         <h2>Filter</h2>
-        <form action="/filter" method="post">
-            <input type="text" name="filterTags" placeholder="Tags, mit Komma getrennt"/>
-            <label>Category:</label>
-            <select name="filterCategory">
+        <form method="post">
+            <input type="text" name="filterTags" placeholder="Tags, mit Komma getrennt" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
+            <input type="checkbox" name="mustContainAllTags" id="mustContainAllTags" th:checked="${filter?.mustContainAllTags}">
+            <label for="mustContainAllTags">Must contain all tags</label><br><br>
+            <label for="filterCategory">Category:</label>
+            <select id="filterCategory" name="filterCategory">
                 <option selected value='disabled'>Don't Filter</option>
-                <option value='null'>No Category</option>
-                <option value="kategorie1">Kategorie1</option>
-                <option value="kategorie2">Kategorie2</option>
-                <option value="kategorie3">Kategorie3</option>
-                <option value="kategorie4">Kategorie4</option>
-            </select>
-            <button type="submit">Filter</button>
+                <option value=''>No Category</option>
+                <option th:each="choice : ${categories}"
+                        th:value="${choice.categoryName}"
+                        th:text="${choice.categoryName}"
+                        th:selected="(${choice.id} == *{lastFilterCategory?.id})"></option>
+            </select><br><br>
+            <button type="submit" formaction="/filter">Filter</button>
+            <button type="submit" formaction="/resetFilter">Reset Filter</button>
         </form>
     </div>
 
