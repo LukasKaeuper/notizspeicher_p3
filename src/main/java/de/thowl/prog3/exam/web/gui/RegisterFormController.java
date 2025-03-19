@@ -36,6 +36,8 @@ public class RegisterFormController {
             case "registration failed":
                 model.addAttribute("errorMessage", "Registrierung fehlgeschlagen!");
                 break;
+            case "duplicate error":
+                model.addAttribute("errorMessage", "Registrierung fehlgeschlagen! Benutzer existiert bereits!");
         }
         return "register";
 

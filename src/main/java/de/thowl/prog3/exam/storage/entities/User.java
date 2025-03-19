@@ -20,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     @Size(min = 5, max = 30)
     private String name;
 
@@ -28,7 +28,7 @@ public class User {
     //@Size(min = 5, max = 30)
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @Size(min = 5, max = 30)
     private String email;
 

@@ -9,6 +9,7 @@ import de.thowl.prog3.exam.service.UserService;
 import de.thowl.prog3.exam.storage.entities.Session;
 import de.thowl.prog3.exam.storage.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import de.thowl.prog3.exam.security.entities.AccessToken;
@@ -86,6 +87,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             u.setPassword(hashedPassword);
             userService.saveUser(u);
             return "user registered";
+        } catch (DataIntegrityViolationException e) {
+            log.error("Registration failed: Duplicate username or email", e);
+            return "duplicate error";
         } catch (Exception e) {
             log.error("Registration failed", e);
             return "registration failed";
