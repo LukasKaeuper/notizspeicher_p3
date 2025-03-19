@@ -5,15 +5,13 @@
 </head>
 <body>
 <h1>Geteilte Notiz</h1>
-<div th:if="${note != null}">
-    <h2 th:text="${note.title}">Titel</h2>
+<div>
+<h2 th:text="${note.title}">Titel</h2>
     <p th:text="${note.content}">Inhalt</p>
     <p th:text="${note.tags}">Tags</p>
-    <p th:text="${note.category}">Kategorie</p>
+    <p th:text="${note.category.getCategoryName}">Kategorie</p>
     <p th:text="${note.createdAt}">Erstellungsdatum</p>
 </div>
-<div th:if="${note == null}">
-    <p>Die Notiz konnte nicht gefunden werden.</p>
 </div>
 </body>
 </html>
