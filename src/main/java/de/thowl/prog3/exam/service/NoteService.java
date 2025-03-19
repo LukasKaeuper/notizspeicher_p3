@@ -12,4 +12,9 @@ public interface NoteService {
 
     List<Note> getFilteredNotes(Long userId, List<String> tags, String category, boolean mustContainAllTags, String filterDateType, String filterDate);
 
+    String generateToken();
+
+    String generateLink(String token);
+
+    Note getNoteByToken(String token);
 }

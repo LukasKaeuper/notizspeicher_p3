@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,5 +104,17 @@ public class DashboardFormController {
         Long userId = (Long) session.getAttribute("userId");
         categoryService.saveCategory(formdata.getCategoryName(), userId, formdata.getCategoryColour());
         return "redirect:/dashboard";
+    }
+
+    @GetMapping("/sharedNote")
+    public String viewNote(@RequestParam String shareToken, Model model) {
+        try {
+            Note note = noteService.getNoteByToken(shareToken);
+            model.addAttribute("note", note);
+            return "sharedNote";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "error";
+        }
     }
 }

@@ -64,16 +64,22 @@
 
     <div>
         <h2>Deine Notizen</h2>
-        <div th:each="note : ${notes}" class="note" th:style="${'background: ' + note.categoryColour()}">
+        <div th:each="note, iterStat : ${notes}" class="note" th:style="${'background: ' + note.categoryColour()}">
             <p class="note-title" th:text="${note.title}">Note Title</p>
             <p class="note-content" th:text="${note.content}">Note Content</p>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>
             <p class="note-category" th:text="${note.category}">Note Category</p>
             <p class="note-createdAt" th:text="${note.createdAt}">Note Creation Time</p>
+
+            <a th:href="${note.shareLink}" target="_blank">
+                <button>Notiz freigeben</button>
+            </a>
+            </div>
         </div>
-    </div>
 
     <div>
+        <br>
+        <br>
         <h2>Filter</h2>
         <form method="post">
             <input type="text" name="filterTags" placeholder="Schlagwort" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>

@@ -2,7 +2,6 @@ package de.thowl.prog3.exam.web.gui;
 
 
 import de.thowl.prog3.exam.security.AuthenticationService;
-import de.thowl.prog3.exam.service.UserService;
 import de.thowl.prog3.exam.web.gui.form.UserForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

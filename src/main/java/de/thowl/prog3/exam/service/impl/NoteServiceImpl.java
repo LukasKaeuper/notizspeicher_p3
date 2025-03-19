@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -29,6 +31,9 @@ public class NoteServiceImpl implements NoteService {
         note.setUserId(userId);
         note.setTags(tags);
         note.setCreatedAt(LocalDateTime.now());
+        String shareToken = generateToken();
+        note.setShareToken(shareToken);
+        note.setShareLink(generateLink(shareToken));
         if (!categoryName.isEmpty()) {
             note.setCategory(categoryService.getCategory(categoryName));
         }
@@ -70,5 +75,20 @@ public class NoteServiceImpl implements NoteService {
 //                return filteredNotes;
 //        }
         return filteredNotes;
+    }
+
+    @Override
+    public String generateToken(){
+        return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public String generateLink(String token){
+        return "http://localhost:8080/sharedNote?shareToken=" + token;
+    }
+
+    @Override
+    public Note getNoteByToken(String token){
+        return repository.findByShareToken(token).orElseThrow();
     }
 }

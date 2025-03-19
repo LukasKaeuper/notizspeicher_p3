@@ -38,6 +38,10 @@ public class Note {
 
     private LocalDateTime createdAt;
 
+    private String shareToken;
+
+    private String shareLink;
+
 //    @ElementCollection
 //    private List<Note> subNotes;
 }
