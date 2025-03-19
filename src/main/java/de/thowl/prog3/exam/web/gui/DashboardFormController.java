@@ -110,7 +110,8 @@ public class DashboardFormController {
     public String viewNote(@RequestParam String shareToken, Model model) {
         try {
             Note note = noteService.getNoteByToken(shareToken);
-            model.addAttribute("note", note);
+            NoteDTO noteDTO = noteMapper.map(note);
+            model.addAttribute("note", noteDTO);
             return "sharedNote";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());

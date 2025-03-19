@@ -12,7 +12,6 @@
             height: 200px;
             display: inline-block;
             vertical-align: top;
-            /*background-color: #f9f9a9;*/
         }
         .note-title {
             font-weight: bold;
@@ -64,7 +63,7 @@
 
     <div>
         <h2>Deine Notizen</h2>
-        <div th:each="note, iterStat : ${notes}" class="note" th:style="${'background: ' + note.categoryColour()}">
+        <div th:each="note, iterStat : ${notes}" class="note" th:style="${'background: ' + note.categoryColour}">
             <p class="note-title" th:text="${note.title}">Note Title</p>
             <p class="note-content" th:text="${note.content}">Note Content</p>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>

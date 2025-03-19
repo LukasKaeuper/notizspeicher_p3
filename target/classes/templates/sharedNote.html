@@ -1,17 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<style>
+    .note {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px;
+        width: 200px;
+        height: 200px;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .note-title {
+        font-weight: bold;
+        font-family: "Comic Sans MS";
+    }
+    .note-content {
+        margin-top: 10px;
+        font-family: "Comic Sans MS";
+    }
+</style>
 <head>
     <title>Geteilte Notiz</title>
 </head>
 <body>
 <h1>Geteilte Notiz</h1>
-<div>
-<h2 th:text="${note.title}">Titel</h2>
-    <p th:text="${note.content}">Inhalt</p>
+<div class="note" th:style="${'background: ' + note.categoryColour}">
+<h2 class="note-title" th:text="${note.title}">Titel</h2>
+    <p class="note-content" th:text="${note.content}">Inhalt</p>
     <p th:text="${note.tags}">Tags</p>
-    <p th:text="${note.category.getCategoryName}">Kategorie</p>
+    <p th:text="${note.category}">Kategorie</p>
     <p th:text="${note.createdAt}">Erstellungsdatum</p>
-</div>
 </div>
 </body>
 </html>
