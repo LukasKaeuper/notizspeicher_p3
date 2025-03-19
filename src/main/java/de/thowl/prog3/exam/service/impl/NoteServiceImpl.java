@@ -39,7 +39,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getNotesByUser(long userId) {
+    public List<Note> getNotesByUser(Long userId) {
         return repository.findByUserId(userId);
     }
 

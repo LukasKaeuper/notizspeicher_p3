@@ -1,6 +1,8 @@
 package de.thowl.prog3.exam.service;
 
+import de.thowl.prog3.exam.storage.entities.Category;
 import de.thowl.prog3.exam.storage.entities.Note;
+import de.thowl.prog3.exam.storage.repositories.CategoryRepository;
 import de.thowl.prog3.exam.storage.repositories.NoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,12 +23,19 @@ public class TestNoteService {
     private NoteRepository noteRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private NoteService noteService;
 
+    private Category category;
     private Note note;
 
     @BeforeEach
     public void setUp() {
+        noteRepository.deleteAll();
+        categoryRepository.deleteAll();
+        category = createTestCategory();
         note = createTestNote();
     }
 
@@ -34,24 +43,32 @@ public class TestNoteService {
         note = new Note();
         note.setTitle("testTitle");
         note.setContent("testContent");
-        note.setUserId(4);
+        note.setUserId(4L);
         note.setTags(List.of("testTag1", "testTag2"));
-        note.setCategory("testCategory");
+        note.setCategory(category);
         noteRepository.save(note);
         return note;
+    }
+
+    private Category createTestCategory() {
+        category = new Category();
+        category.setCategoryName("testCategory");
+        category.setUserId(4L);
+        categoryRepository.save(category);
+        return category;
     }
 
     @Test
     @DisplayName("Should save a note")
     public void testSaveNote() {
         log.debug("entering testSaveNote");
-        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), note.getCategory());
+        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName());
         List<Note> notes = noteRepository.findByUserId(note.getUserId());
         assertTrue(notes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&
                         savedNote.getContent().equals(note.getContent()) &&
                         savedNote.getTags().containsAll(note.getTags()) &&
-                        savedNote.getCategory().equals(note.getCategory())
+                        savedNote.getCategory().getCategoryName().equals(note.getCategory().getCategoryName())
         ), "Note should be saved correctly");
     }
 
@@ -64,7 +81,7 @@ public class TestNoteService {
                         savedNote.getTitle().equals(note.getTitle()) &&
                         savedNote.getContent().equals(note.getContent()) &&
                         savedNote.getTags().containsAll(note.getTags()) &&
-                        savedNote.getCategory().equals(note.getCategory())
+                        savedNote.getCategory().getCategoryName().equals(note.getCategory().getCategoryName())
         ), "List of notes should not be empty");
     }
 
@@ -72,12 +89,13 @@ public class TestNoteService {
     @DisplayName("Should return a list of filtered notes")
     public void testGetFilteredNotes() {
         log.debug("entering testGetFilteredNotes");
-        List<Note> filteredNotes = noteService.getFilteredNotes(note.getUserId(), List.of("testTag1"), "testCategory");
+        List<Note> filteredNotes = noteService.getFilteredNotes(note.getUserId(), List.of("testTag1"),
+                "testCategory", false, "disabled", "");
         assertTrue(filteredNotes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&
                         savedNote.getContent().equals(note.getContent()) &&
                         savedNote.getTags().containsAll(note.getTags()) &&
-                        savedNote.getCategory().equals(note.getCategory())
+                        savedNote.getCategory().getCategoryName().equals(note.getCategory().getCategoryName())
         ), "List of filtered notes should not be empty");
     }
 }

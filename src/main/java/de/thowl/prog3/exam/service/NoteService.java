@@ -8,7 +8,7 @@ public interface NoteService {
 
     void saveNote(String title, String content, Long userId, List<String> tags, String category);
 
-    List<Note> getNotesByUser(long userId);
+    List<Note> getNotesByUser(Long userId);
 
     List<Note> getFilteredNotes(Long userId, List<String> tags, String category, boolean mustContainAllTags, String filterDateType, String filterDate);
 

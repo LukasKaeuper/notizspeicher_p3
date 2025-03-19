@@ -9,6 +9,7 @@ import de.thowl.prog3.exam.service.UserService;
 import de.thowl.prog3.exam.storage.entities.Session;
 import de.thowl.prog3.exam.storage.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import de.thowl.prog3.exam.security.entities.AccessToken;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private UserService userService;
     @Autowired
     private SessionService sessionService;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public AuthenticationServiceImpl() {
 
@@ -32,7 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         boolean result = false;
         User u = userService.getUser(username);
         if (null != u) {
-            if (u.getPassword().equals(password)) {
+            if (passwordEncoder.matches(password, u.getPassword())) {
                 result = true;
             }
         }
@@ -44,7 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         log.debug("AccessToken login");
         AccessToken result = new AccessToken();
         User u = userService.getUser(username);
-        if (u.getPassword().equals(password)) {
+        if (passwordEncoder.matches(password, u.getPassword())) {
             UUID uuid = UUID.randomUUID();
             result.setUSID(uuid.toString());
             result.setLastactive(new Date());
@@ -79,7 +82,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             User u = new User();
             u.setName(username);
             u.setEmail(email);
-            u.setPassword(password);
+            String hashedPassword = new BCryptPasswordEncoder().encode(password);
+            u.setPassword(hashedPassword);
             userService.saveUser(u);
             return "user registered";
         } catch (Exception e) {

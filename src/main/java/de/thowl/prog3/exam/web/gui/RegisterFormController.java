@@ -28,7 +28,7 @@ public class RegisterFormController {
     public String registerUser(Model model, UserForm formdata) {
         switch (auth.register(formdata.getUsername(), formdata.getEmail(), formdata.getPassword())) {
             case "validation error":
-                model.addAttribute("errorMessage", "Fehler bei der Eingabe!, mindesens 5 Zeichen");
+                model.addAttribute("errorMessage", "Fehler bei der Eingabe!, mindestens 5 Zeichen");
                 break;
             case "user registered":
                 model.addAttribute("message", "Benutzer wurde erfolgreich registriert!");
