@@ -24,14 +24,6 @@
         .add-note {
             margin: 20px 0;
         }
-        .message {
-            color: green;
-            margin-top: 20px;
-        }
-        .error {
-            color: red;
-            margin-top: 20px;
-        }
     </style>
 </head>
 
@@ -47,8 +39,6 @@
             <button type="submit">hinzufügen</button>
             <a th:if="${categoryMessage == 'Kategorie erfolgreich gespeichert!'}" th:text="${categoryMessage}" th:style="'color:green'"></a>
             <a th:if="${categoryMessage == 'Kategorie existiert bereits!'}" th:text="${categoryMessage}" th:style="'color:red'"></a>
-<!--            <div th:if="${categoryMessage == 'Kategorie erfolgreich gespeichert!'}" th:text="${categoryMessage}" th:style="'color:green'"></div>-->
-<!--            <div th:if="${categoryMessage == 'Kategorie existiert bereits!'}" th:text="${categoryMessage}" th:style="'color:red'"></div>-->
         </form>
     </div>
 
