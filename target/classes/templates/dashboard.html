@@ -67,8 +67,8 @@
         <h2>Deine Notizen</h2>
         <div th:each="note, iterStat : ${notes}" class="note" th:style="${'background: ' + note.categoryColour}">
             <a th:if="${note.type == 'link'}" class="note-title" th:text="${note.title}" th:href="${note.content}" target="_blank">Note Title</a>
-            <p th:unless="${note.type == 'link'}" class="note-title" th:text="${note.title}">Note Title</p>
-            <p th:unless="${note.type == 'link'}" class="note-content" th:text="${note.content}">Note Content</p>
+            <p th:if="${note.type == 'text'}" class="note-title" th:text="${note.title}">Note Title</p>
+            <p th:if="${note.type == 'text'}" class="note-content" th:text="${note.content}">Note Content</p>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>
             <p class="note-category" th:text="${note.category}">Note Category</p>
             <p class="note-createdAt" th:text="${note.createdAt}">Note Creation Time</p>
@@ -95,6 +95,12 @@
                         th:value="${choice.categoryName}"
                         th:text="${choice.categoryName}"
                         th:selected="(${choice.categoryName} == *{filter?.filterCategory})"></option>
+            </select><br><br>
+            <label for="filterNoteType">Notiz Typ:</label>
+            <select id="filterNoteType" name="filterNoteType">
+                <option selected value="disabled">Nicht Filtern</option>
+                <option th:selected="${filter?.filterNoteType} == 'text'" value="text">Text</option>
+                <option th:selected="${filter?.filterNoteType} == 'link'" value="link">Link</option>
             </select><br><br>
             <label for="filterDateType">Datum:</label>
             <select id="filterDateType" name="filterDateType">

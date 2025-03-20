@@ -67,7 +67,7 @@ public class DashboardFormController {
     @PostMapping("/filter")
     public String filter(FilterForm formdata, HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
-        List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags(), formdata.getFilterDateType(), formdata.getFilterDate());
+        List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags(), formdata.getFilterDateType(), formdata.getFilterDate(), formdata.getFilterNoteType());
         addAttributes(filteredNotes, session, model, null);
         model.addAttribute("filter", formdata);
         log.debug(formdata.toString());
