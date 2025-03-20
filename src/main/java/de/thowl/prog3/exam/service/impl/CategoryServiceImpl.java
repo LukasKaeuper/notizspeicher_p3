@@ -14,16 +14,21 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public void saveCategory(String categoryName, Long userId, String categoryColour) {
-        Category category = new Category();
-        category.setCategoryName(categoryName);
-        category.setUserId(userId);
-        category.setCategoryColour(categoryColour);
-        categoryRepository.save(category);
+    public String saveCategory(String categoryName, Long userId, String categoryColour) {
+        if (getCategory(categoryName, userId) == null) {
+            Category category = new Category();
+            category.setCategoryName(categoryName);
+            category.setUserId(userId);
+            category.setCategoryColour(categoryColour);
+            categoryRepository.save(category);
+            return "Category created";
+        } else {
+            return "Category already exists";
+        }
     }
 
-    public Category getCategory(String categoryName) {
-        return categoryRepository.findByCategoryName(categoryName);
+    public Category getCategory(String categoryName, Long userId) {
+        return categoryRepository.findByCategoryNameAndUserId(categoryName, userId);
     }
 
     public List<Category> getCategoriesByUser(Long userId) {

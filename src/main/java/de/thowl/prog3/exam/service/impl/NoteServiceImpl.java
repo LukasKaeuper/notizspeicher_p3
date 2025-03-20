@@ -35,7 +35,7 @@ public class NoteServiceImpl implements NoteService {
         note.setShareToken(shareToken);
         note.setShareLink(generateLink(shareToken));
         if (!categoryName.isEmpty()) {
-            note.setCategory(categoryService.getCategory(categoryName));
+            note.setCategory(categoryService.getCategory(categoryName, userId));
         }
         else {
             note.setCategory(null);

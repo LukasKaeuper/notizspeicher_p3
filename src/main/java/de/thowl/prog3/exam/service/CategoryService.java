@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface CategoryService {
 
-    Category getCategory(String categoryName);
+    Category getCategory(String categoryName, Long userId);
 
     List<Category> getCategoriesByUser(Long userId);
 
-    void saveCategory(String categoryName, Long userId, String categoryColour);
+    String saveCategory(String categoryName, Long userId, String categoryColour);
 }

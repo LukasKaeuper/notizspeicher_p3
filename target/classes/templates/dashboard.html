@@ -9,7 +9,7 @@
             padding: 10px;
             margin: 10px;
             width: 200px;
-            height: 200px;
+            height: 230px;
             display: inline-block;
             vertical-align: top;
         }
@@ -24,6 +24,14 @@
         .add-note {
             margin: 20px 0;
         }
+        .message {
+            color: green;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -37,6 +45,10 @@
             <input type="text" name="categoryName" placeholder="Kategorie" required/>
             <input type="color" name="categoryColour" value="#f9f9a9"/>
             <button type="submit">hinzufügen</button>
+            <a th:if="${categoryMessage == 'Kategorie erfolgreich gespeichert!'}" th:text="${categoryMessage}" th:style="'color:green'"></a>
+            <a th:if="${categoryMessage == 'Kategorie existiert bereits!'}" th:text="${categoryMessage}" th:style="'color:red'"></a>
+<!--            <div th:if="${categoryMessage == 'Kategorie erfolgreich gespeichert!'}" th:text="${categoryMessage}" th:style="'color:green'"></div>-->
+<!--            <div th:if="${categoryMessage == 'Kategorie existiert bereits!'}" th:text="${categoryMessage}" th:style="'color:red'"></div>-->
         </form>
     </div>
 
@@ -49,7 +61,7 @@
             <textarea name="content" placeholder="Text" required></textarea>
             <br>
             <br>
-            <input type="text" name="tags" placeholder="Schlagwörter, getrennt durch Komma"/>
+            <input type="text" name="tags" placeholder="Schlagwort1,Schlagwort2..."/>
             <label>Kategorie:</label>
             <select name="category">
                 <option selected value=''>Keine Kategorie</option>
@@ -81,23 +93,23 @@
         <br>
         <h2>Filter</h2>
         <form method="post">
-            <input type="text" name="filterTags" placeholder="Schlagwort" th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
+            <input type="text" name="filterTags" placeholder="Schlagwort1,Schlagwort2..." th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
             <input type="checkbox" name="mustContainAllTags" id="mustContainAllTags" th:checked="${filter?.mustContainAllTags}">
-            <label for="mustContainAllTags">Muss alle Schlagwörter besitzen</label><br><br>
+            <label for="mustContainAllTags">Muss alle Schlagwörter enthalten</label><br><br>
             <label for="filterCategory">Kategorie:</label>
             <select id="filterCategory" name="filterCategory">
-                <option selected value='disabled'>Kein Filter</option>
-                <option th:selected="${lastFilterCategory} == ''" value=''>No Category</option>
+                <option value='disabled'>Nicht Filtern</option>
+                <option th:selected="${filter?.filterCategory} == ''" value=''>Keine Kategorie</option>
                 <option th:each="choice : ${categories}"
                         th:value="${choice.categoryName}"
                         th:text="${choice.categoryName}"
-                        th:selected="(${choice.id} == *{lastFilterCategory?.id})"></option>
+                        th:selected="(${choice.categoryName} == *{filter?.filterCategory})"></option>
             </select><br><br>
             <label for="filterDateType">Datum:</label>
             <select id="filterDateType" name="filterDateType">
-                <option selected value="disabled">Kein Filter</option>
-                <option th:selected="${lastFilterDateType} == 'before'" value="before">Before:</option>
-                <option th:selected="${lastFilterDateType} == 'after'" value="after">After:</option>
+                <option selected value="disabled">Nicht Filtern</option>
+                <option th:selected="${filter?.filterDateType} == 'before'" value="before">Vor:</option>
+                <option th:selected="${filter?.filterDateType} == 'after'" value="after">Nach:</option>
             </select>
             <input type="datetime-local" name="filterDate" th:value="${filter?.filterDate}">
             <br><br>

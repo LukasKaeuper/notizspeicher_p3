@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,18 +45,11 @@ public class DashboardFormController {
     private CategoryService categoryService;
 
     @GetMapping("/dashboard")
-    public String showDashboard(HttpSession session, Model model) {
+    public String showDashboard(HttpSession session, Model model, @RequestParam(required = false) String categoryMessage) {
         UserDTO user = (UserDTO) session.getAttribute("user");
         Long userId = (Long) session.getAttribute("userId");
         List<Note> notes = noteService.getNotesByUser(userId);
-        List<NoteDTO> noteDTOs = new ArrayList<>();
-        notes.forEach(note -> {noteDTOs.add(noteMapper.map(note));});
-        List<Category> categories = categoryService.getCategoriesByUser(userId);
-        List<CategoryDTO> categoryDTOs = new ArrayList<>();
-        categories.forEach(category -> categoryDTOs.add(categoryMapper.map(category)));
-        model.addAttribute("notes", noteDTOs);
-        model.addAttribute("user", user);
-        model.addAttribute("categories", categoryDTOs);
+        addAttributes(notes, session, model, categoryMessage);
         if (user == null) {
             return "redirect:/login";
         }
@@ -72,25 +66,11 @@ public class DashboardFormController {
 
     @PostMapping("/filter")
     public String filter(FilterForm formdata, HttpSession session, Model model) {
-        UserDTO user = (UserDTO) session.getAttribute("user");
         Long userId = (Long) session.getAttribute("userId");
         List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags(), formdata.getFilterDateType(), formdata.getFilterDate());
-        List<NoteDTO> filteredNoteDTOs = new ArrayList<>();
-        filteredNotes.forEach(note -> {filteredNoteDTOs.add(noteMapper.map(note));});
-        List<Category> categories = categoryService.getCategoriesByUser(userId);
-        List<CategoryDTO> categoryDTOs = new ArrayList<>();
-        categories.forEach(category -> categoryDTOs.add(categoryMapper.map(category)));
-        CategoryDTO lastFilterCategory = categoryMapper.map(categoryService.getCategory(formdata.getFilterCategory()));
-        String lastFilterDateType = formdata.getFilterDateType();
-        model.addAttribute("notes", filteredNoteDTOs);
-        model.addAttribute("user", user);
+        addAttributes(filteredNotes, session, model, null);
         model.addAttribute("filter", formdata);
-        model.addAttribute("categories", categoryDTOs);
-        model.addAttribute("lastFilterCategory", lastFilterCategory);
-        model.addAttribute("lastFilterDateType", lastFilterDateType);
         log.debug(formdata.toString());
-        log.debug(filteredNoteDTOs.toString());
-        log.debug(categoryDTOs.toString());
         return "/dashboard";
     }
 
@@ -100,9 +80,19 @@ public class DashboardFormController {
     }
 
     @PostMapping("/addCategory")
-    public String addCategory(CategoryForm formdata, HttpSession session, Model model) {
+    public String addCategory(CategoryForm formdata, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         Long userId = (Long) session.getAttribute("userId");
-        categoryService.saveCategory(formdata.getCategoryName(), userId, formdata.getCategoryColour());
+        switch(categoryService.saveCategory(formdata.getCategoryName(), userId, formdata.getCategoryColour())) {
+            case "Category created":
+                redirectAttributes.addAttribute("categoryMessage", "Kategorie erfolgreich gespeichert!");
+//                model.addAttribute("categorySuccessMessage", "Kategorie erfolgreich gespeichert!");
+                log.debug(redirectAttributes.getAttribute("categoryMessage").toString());
+                break;
+            case "Category already exists":
+                redirectAttributes.addAttribute("categoryMessage", "Kategorie existiert bereits!");
+                log.debug(redirectAttributes.getAttribute("categoryMessage").toString());
+                break;
+        }
         return "redirect:/dashboard";
     }
 
@@ -117,5 +107,21 @@ public class DashboardFormController {
             model.addAttribute("error", e.getMessage());
             return "error";
         }
+    }
+
+    private void addAttributes(List<Note> notes, HttpSession session, Model model, String categoryMessage) {
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        Long userId = (Long) session.getAttribute("userId");
+        List<NoteDTO> NoteDTOs = new ArrayList<>();
+        notes.forEach(note -> {NoteDTOs.add(noteMapper.map(note));});
+        List<Category> categories = categoryService.getCategoriesByUser(userId);
+        List<CategoryDTO> categoryDTOs = new ArrayList<>();
+        categories.forEach(category -> categoryDTOs.add(categoryMapper.map(category)));
+        model.addAttribute("user", user);
+        model.addAttribute("notes", NoteDTOs);
+        model.addAttribute("categories", categoryDTOs);
+        model.addAttribute("categoryMessage", categoryMessage);
+        log.debug(NoteDTOs.toString());
+        log.debug(categoryDTOs.toString());
     }
 }
