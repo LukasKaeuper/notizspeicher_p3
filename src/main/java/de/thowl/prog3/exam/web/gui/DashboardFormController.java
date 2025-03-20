@@ -85,7 +85,6 @@ public class DashboardFormController {
         switch(categoryService.saveCategory(formdata.getCategoryName(), userId, formdata.getCategoryColour())) {
             case "Category created":
                 redirectAttributes.addAttribute("categoryMessage", "Kategorie erfolgreich gespeichert!");
-//                model.addAttribute("categorySuccessMessage", "Kategorie erfolgreich gespeichert!");
                 log.debug(redirectAttributes.getAttribute("categoryMessage").toString());
                 break;
             case "Category already exists":

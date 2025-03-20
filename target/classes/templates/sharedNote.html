@@ -25,8 +25,9 @@
 <body>
 <h1>Geteilte Notiz</h1>
 <div class="note" th:style="${'background: ' + note.categoryColour}">
-<h2 class="note-title" th:text="${note.title}">Titel</h2>
-    <p class="note-content" th:text="${note.content}">Inhalt</p>
+    <a th:if="${note.type == 'link'}" class="note-title" th:text="${note.title}" th:href="${note.content}" target="_blank">Note Title</a>
+    <p th:unless="${note.type == 'link'}" class="note-title" th:text="${note.title}">Note Title</p>
+    <p th:unless="${note.type == 'link'}" class="note-content" th:text="${note.content}">Note Content</p>
     <p th:text="${note.tags}">Tags</p>
     <p th:text="${note.category}">Kategorie</p>
     <p th:text="${note.createdAt}">Erstellungsdatum</p>

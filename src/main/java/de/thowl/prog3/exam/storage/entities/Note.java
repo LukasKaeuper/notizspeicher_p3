@@ -42,6 +42,8 @@ public class Note {
 
     private String shareLink;
 
+    private String type;
+
 //    @ElementCollection
 //    private List<Note> subNotes;
 }

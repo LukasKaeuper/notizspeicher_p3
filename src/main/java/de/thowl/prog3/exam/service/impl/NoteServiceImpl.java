@@ -7,11 +7,13 @@ import de.thowl.prog3.exam.storage.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,7 +30,6 @@ public class NoteServiceImpl implements NoteService {
     public void saveNote(String title, String content, Long userId, List<String> tags, String categoryName) {
         Note note = new Note();
         note.setTitle(title);
-        note.setContent(content);
         note.setUserId(userId);
         note.setTags(tags);
         note.setCreatedAt(LocalDateTime.now());
@@ -40,6 +41,14 @@ public class NoteServiceImpl implements NoteService {
         }
         else {
             note.setCategory(null);
+        }
+        try {
+            URL url = new URL(content);
+            note.setContent(url.toExternalForm());
+            note.setType("link");
+        } catch (MalformedURLException e) {
+            note.setType("text)");
+            note.setContent(content);
         }
         repository.save(note);
     }

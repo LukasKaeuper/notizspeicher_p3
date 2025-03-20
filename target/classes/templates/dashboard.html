@@ -66,8 +66,9 @@
     <div>
         <h2>Deine Notizen</h2>
         <div th:each="note, iterStat : ${notes}" class="note" th:style="${'background: ' + note.categoryColour}">
-            <p class="note-title" th:text="${note.title}">Note Title</p>
-            <p class="note-content" th:text="${note.content}">Note Content</p>
+            <a th:if="${note.type == 'link'}" class="note-title" th:text="${note.title}" th:href="${note.content}" target="_blank">Note Title</a>
+            <p th:unless="${note.type == 'link'}" class="note-title" th:text="${note.title}">Note Title</p>
+            <p th:unless="${note.type == 'link'}" class="note-content" th:text="${note.content}">Note Content</p>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>
             <p class="note-category" th:text="${note.category}">Note Category</p>
             <p class="note-createdAt" th:text="${note.createdAt}">Note Creation Time</p>
