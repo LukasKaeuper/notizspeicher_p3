@@ -61,7 +61,6 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate) {
         List<Note> filteredNotes = new ArrayList<>();
-        LocalDateTime filterDateObject = LocalDateTime.parse(filterDate);
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
                 if ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
@@ -75,17 +74,20 @@ public class NoteServiceImpl implements NoteService {
                     filteredNotes.add(note);
                 }
             }
-            switch(filterDateType){
-                case "before":
-                    if (filterDateObject.isBefore(note.getCreatedAt())) {
-                        filteredNotes.remove(note);
-                    }
-                    break;
-                case "after":
-                    if (filterDateObject.isAfter(note.getCreatedAt())) {
-                        filteredNotes.remove(note);
-                    }
-                    break;
+            if (!filterDateType.equals("disabled") && !filterDate.isEmpty()) {
+                LocalDateTime filterDateObject = LocalDateTime.parse(filterDate);
+                switch(filterDateType){
+                    case "before":
+                        if (filterDateObject.isBefore(note.getCreatedAt())) {
+                            filteredNotes.remove(note);
+                        }
+                        break;
+                    case "after":
+                        if (filterDateObject.isAfter(note.getCreatedAt())) {
+                            filteredNotes.remove(note);
+                        }
+                        break;
+                }
             }
         }
         return filteredNotes;
