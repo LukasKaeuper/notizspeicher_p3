@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Service
 public class NoteServiceImpl implements NoteService {
 
@@ -51,7 +52,7 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate) {
         List<Note> filteredNotes = new ArrayList<>();
-
+        LocalDateTime filterDateObject = LocalDateTime.parse(filterDate);
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
                 if ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
@@ -65,15 +66,19 @@ public class NoteServiceImpl implements NoteService {
                     filteredNotes.add(note);
                 }
             }
+            switch(filterDateType){
+                case "before":
+                    if (filterDateObject.isBefore(note.getCreatedAt())) {
+                        filteredNotes.remove(note);
+                    }
+                    break;
+                case "after":
+                    if (filterDateObject.isAfter(note.getCreatedAt())) {
+                        filteredNotes.remove(note);
+                    }
+                    break;
+            }
         }
-//        switch(filterDateType){
-//            case "before":
-//                return filteredNotes;
-//            case "after":
-//                return filteredNotes;
-//            default:
-//                return filteredNotes;
-//        }
         return filteredNotes;
     }
 
