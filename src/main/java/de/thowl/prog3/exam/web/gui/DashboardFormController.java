@@ -59,7 +59,7 @@ public class DashboardFormController {
     @PostMapping("/addNote")
     public String saveNote(NoteForm formdata, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
-        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags(), formdata.getCategory());
+        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags(), formdata.getCategory(), formdata.getImage());
         log.debug(formdata.toString());
         return "redirect:/dashboard";
     }
@@ -120,7 +120,7 @@ public class DashboardFormController {
         model.addAttribute("notes", NoteDTOs);
         model.addAttribute("categories", categoryDTOs);
         model.addAttribute("categoryMessage", categoryMessage);
-        log.debug(NoteDTOs.toString());
+        //log.debug(NoteDTOs.toString());
         log.debug(categoryDTOs.toString());
     }
 }

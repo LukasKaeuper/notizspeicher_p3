@@ -7,6 +7,7 @@ import de.thowl.prog3.exam.storage.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -27,7 +29,7 @@ public class NoteServiceImpl implements NoteService {
     private CategoryService categoryService;
 
     @Override
-    public void saveNote(String title, String content, Long userId, List<String> tags, String categoryName) {
+    public void saveNote(String title, String content, Long userId, List<String> tags, String categoryName, MultipartFile image) {
         Note note = new Note();
         note.setTitle(title);
         note.setUserId(userId);
@@ -47,8 +49,19 @@ public class NoteServiceImpl implements NoteService {
             note.setContent(url.toExternalForm());
             note.setType("link");
         } catch (MalformedURLException e) {
-            note.setType("text");
-            note.setContent(content);
+            if (!image.isEmpty()) {
+//                note.setImageUrl(imageUrl);
+                note.setType("image");
+                try {
+                    note.setImage(image.getBytes());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                note.setContent("");
+            } else {
+                note.setType("text");
+                note.setContent(content);
+            }
         }
         repository.save(note);
     }
@@ -62,7 +75,6 @@ public class NoteServiceImpl implements NoteService {
     public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, String filterNoteType) {
         List<Note> filteredNotes = new ArrayList<>();
         for (Note note : repository.findByUserId(userId)) {
-            log.debug("Note Type: " + note.getType());
             if (mustContainAllTags){
                 if ((filterNoteType.equals(note.getType()) || filterNoteType.equals("disabled")) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
                         (!filterTags.isEmpty() && note.getTags().containsAll(filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())))) {

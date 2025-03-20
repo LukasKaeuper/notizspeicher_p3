@@ -9,7 +9,7 @@
             padding: 10px;
             margin: 10px;
             width: 200px;
-            height: 230px;
+            height: 270px;
             display: inline-block;
             vertical-align: top;
         }
@@ -44,11 +44,13 @@
 
     <h2>Neue Notiz erstellen</h2>
     <div class="add-note">
-        <form action="/addNote" method="post">
+        <form action="/addNote" method="post" enctype="multipart/form-data">
             <input type="text" name="title" placeholder="Titel" required/>
             <br>
             <br>
             <textarea name="content" placeholder="Text/Link" required></textarea>
+            <label for="imageUpload">Bild als Notiz hochladen: </label>
+            <input type="file" id="imageUpload" name="image" accept="image/png, image/jpeg"/>
             <br>
             <br>
             <input type="text" name="tags" placeholder="Schlagwort1,Schlagwort2..."/>
@@ -65,10 +67,10 @@
 
     <div>
         <h2>Deine Notizen</h2>
-        <div th:each="note, iterStat : ${notes}" class="note" th:style="${'background: ' + note.categoryColour}">
+        <div th:each="note, iterStat : ${notes}" class="note" th:styleappend="${note.type == 'image' ? note.image : 'background: ' + note.categoryColour}" th:style="'background-size: contain;'">
             <a th:if="${note.type == 'link'}" class="note-title" th:text="${note.title}" th:href="${note.content}" target="_blank">Note Title</a>
-            <p th:if="${note.type == 'text'}" class="note-title" th:text="${note.title}">Note Title</p>
-            <p th:if="${note.type == 'text'}" class="note-content" th:text="${note.content}">Note Content</p>
+            <p th:unless="${note.type == 'link'}" class="note-title" th:text="${note.title}">Note Title</p>
+            <p th:if="${note.type == 'text'}" class="note-content" th:text="${note.content}">Note Content</p><br><br>
             <p class="note-tags" th:text="${note.tags}">Note Tags</p>
             <p class="note-category" th:text="${note.category}">Note Category</p>
             <p class="note-createdAt" th:text="${note.createdAt}">Note Creation Time</p>
@@ -101,6 +103,7 @@
                 <option selected value="disabled">Nicht Filtern</option>
                 <option th:selected="${filter?.filterNoteType} == 'text'" value="text">Text</option>
                 <option th:selected="${filter?.filterNoteType} == 'link'" value="link">Link</option>
+                <option th:selected="${filter?.filterNoteType} == 'image'" value="image">Bild</option>
             </select><br><br>
             <label for="filterDateType">Datum:</label>
             <select id="filterDateType" name="filterDateType">
