@@ -3,11 +3,11 @@ package de.thowl.prog3.exam.security.impl;
 import java.util.Date;
 import java.util.UUID;
 import de.thowl.prog3.exam.security.AuthenticationService;
-import de.thowl.prog3.exam.security.InvalidCredentialsException;
 import de.thowl.prog3.exam.service.SessionService;
 import de.thowl.prog3.exam.service.UserService;
 import de.thowl.prog3.exam.storage.entities.Session;
 import de.thowl.prog3.exam.storage.entities.User;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,32 +44,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AccessToken login(String username, String password) throws InvalidCredentialsException {
+    public AccessToken login(String username, String password) {
         log.debug("AccessToken login");
         AccessToken result = new AccessToken();
         User u = userService.getUser(username);
-        if (passwordEncoder.matches(password, u.getPassword())) {
-            UUID uuid = UUID.randomUUID();
-            result.setUSID(uuid.toString());
-            result.setLastactive(new Date());
-            result.setUser_id(u.getId());
-            sessionService.saveSession(result.getUSID(), u);
-        } else {
-            throw new InvalidCredentialsException();
-        }
+        UUID uuid = UUID.randomUUID();
+        result.setUSID(uuid.toString());
+        result.setLastactive(new Date());
+        result.setUser_id(u.getId());
+        sessionService.saveSession(result.getUSID(), u);
         return result;
     }
 
     @Override
-    public boolean logout(AccessToken acc) {
+    public void logout(String token) {
         log.debug("entering logout");
-        boolean result = false;
-        Session s = sessionService.getSessionByToken(acc.getUSID());
+        Session s = sessionService.getSessionByToken(token);
         if (null != s) {
             sessionService.deleteSession(s);
-            result = true;
         }
-        return result;
     }
 
     @Override

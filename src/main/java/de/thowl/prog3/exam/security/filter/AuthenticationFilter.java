@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
@@ -21,7 +22,8 @@ public class AuthenticationFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String token = Session.currentToken;
+        HttpSession session = request.getSession(false);
+        String token = session.getAttribute("token").toString();
         log.info("Token: " + token);
         if (!sessionService.isValidToken(token)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");

@@ -12,6 +12,4 @@ public interface SessionService {
     void deleteSession(Session session);
 
     Session getSessionByToken(String token);
-
-    void setCurrentToken(String token);
 }

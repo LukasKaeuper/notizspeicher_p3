@@ -1,6 +1,7 @@
 package de.thowl.prog3.exam.security;
 
 import de.thowl.prog3.exam.security.entities.AccessToken;
+import jakarta.servlet.http.HttpSession;
 
 public interface AuthenticationService {
 
@@ -8,7 +9,7 @@ public interface AuthenticationService {
 
     AccessToken login(String username, String password) throws InvalidCredentialsException;
 
-    boolean logout(AccessToken acc);
+    void logout(String token);
 
     String register(String username, String email, String password);
 }

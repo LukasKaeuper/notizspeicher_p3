@@ -18,24 +18,15 @@ public class LogoutFormController {
     @Autowired
     private AuthenticationService auth;
 
-    @Autowired
-    private SessionService sessionService;
-
     @PostMapping("/logout")
-    public String logout(AccessToken token) {
+    public String logout(HttpSession session) {
         try {
+            String token = session.getAttribute("token").toString();
             auth.logout(token);
-            sessionService.setCurrentToken(null);
             return "redirect:/login";
         } catch (Exception e) {
             log.error("Logout failed", e);
             return "error";
         }
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
     }
 }

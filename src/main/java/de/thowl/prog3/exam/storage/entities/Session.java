@@ -30,15 +30,12 @@ public class Session {
     @NotNull
     private String token;
 
-    private Long userId;
-
-    public static String currentToken;
+    private Long userId;;
 
     public Session(String token, User u) {
         this.token = token;
         this.userId = u.getId();
         this.createdAt = new Date();
-        currentToken = token;
     }
 
 }
