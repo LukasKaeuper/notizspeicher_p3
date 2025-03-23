@@ -19,23 +19,22 @@ import java.util.Date;
 @NoArgsConstructor
 public class Session {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-
-    @NotNull
-    @NotNull
-    private Date createdAt;
-
-    @NotNull
-    private String token;
-
-    private Long userId;;
-
     public Session(String token, User u) {
         this.token = token;
         this.userId = u.getId();
         this.createdAt = new Date();
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
+    @NotNull
+    private Date createdAt;
+
+    @NotNull
+    private String token;
+
+    @NotNull
+    private Long userId;;
 }
