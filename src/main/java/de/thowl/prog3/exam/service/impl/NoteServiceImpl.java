@@ -86,17 +86,16 @@ public class NoteServiceImpl implements NoteService {
         if (filterNoteTypeText && !filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "text_image";}
         if (!filterNoteTypeText && filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "link_image";}
         if (filterNoteTypeText && filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "text_link_image";}
-        //if (!filterNoteTypeText && !filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "disabled";}
 
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
-                if ((filterNoteType.equals(note.getType()) || filterNoteType.equals("disabled")) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
+                if ((checkFilterNoteType(filterNoteType, note.getType())) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
                         (!filterTags.isEmpty() && note.getTags().containsAll(filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())))) {
                     filteredNotes.add(note);
                 }
             }
             else{
-                if ((filterNoteType.equals(note.getType()) || filterNoteType.equals("disabled")) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
+                if ((checkFilterNoteType(filterNoteType, note.getType())) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
                         (!filterTags.isEmpty() && !Collections.disjoint(note.getTags(), filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())))) {
                     filteredNotes.add(note);
                 }
@@ -118,6 +117,20 @@ public class NoteServiceImpl implements NoteService {
             }
         }
         return filteredNotes;
+    }
+
+    private boolean checkFilterNoteType(String filterNoteType, String noteType){
+        return switch (filterNoteType) {
+            case "disabled" -> true;
+            case "text" -> noteType.equals("text");
+            case "link" -> noteType.equals("link");
+            case "image" -> noteType.equals("image");
+            case "text_link" -> noteType.equals("text_link") || noteType.equals("text") || noteType.equals("link");
+            case "text_image" -> noteType.equals("text_image") || noteType.equals("text") || noteType.equals("image");
+            case "link_image" -> noteType.equals("link_image") || noteType.equals("link") || noteType.equals("image");
+            case "text_link_image" -> noteType.equals("text_link_image");
+            default -> false;
+        };
     }
 
     @Override
