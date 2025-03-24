@@ -7,7 +7,6 @@ import de.thowl.prog3.exam.service.SessionService;
 import de.thowl.prog3.exam.service.UserService;
 import de.thowl.prog3.exam.storage.entities.Session;
 import de.thowl.prog3.exam.storage.entities.User;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,7 +14,10 @@ import org.springframework.stereotype.Service;
 import de.thowl.prog3.exam.security.entities.AccessToken;
 import lombok.extern.slf4j.Slf4j;
 
-
+/**
+ * Die Klasse AuthenticationServiceImpl ist für die Benutzerauthentifizierung zustaendig.
+ * Sie bietet Funktionen für Validierung, Login, Logout und Registrierung
+ */
 @Slf4j
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {

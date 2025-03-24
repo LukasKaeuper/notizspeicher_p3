@@ -8,8 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,7 +65,8 @@ public class TestNoteService {
     @DisplayName("Should save a note")
     public void testSaveNote() {
         log.debug("entering testSaveNote");
-        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName(), null);
+        MultipartFile multipartFile = new MockMultipartFile("empty", new byte[0]);
+        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName(), multipartFile );
         List<Note> notes = noteRepository.findByUserId(note.getUserId());
         assertTrue(notes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&

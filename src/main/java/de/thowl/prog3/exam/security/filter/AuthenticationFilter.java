@@ -11,6 +11,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
+/**
+ * Die Klasse AuthenticationFilter ist für die Authentifizierung der Anfragen zuständig.
+ * Sie überprueft, ob ein gültiger SessionToken für die geschuetzen URLs vorhanden ist.
+ * Diese Klasse wurde mit Unterstuetzung von Copilot geschrieben.
+ */
 @Slf4j
 public class AuthenticationFilter extends HttpFilter {
 
@@ -24,7 +29,6 @@ public class AuthenticationFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = request.getSession(false);
         String token = session.getAttribute("token").toString();
-        log.info("Token: " + token);
         if (!sessionService.isValidToken(token)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         } else {
