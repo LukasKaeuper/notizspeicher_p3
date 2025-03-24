@@ -62,7 +62,7 @@ public class TestNoteService {
     @DisplayName("Should save a note")
     public void testSaveNote() {
         log.debug("entering testSaveNote");
-        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName(), null);
+        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName(), null, note.getLink());
         List<Note> notes = noteRepository.findByUserId(note.getUserId());
         assertTrue(notes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&
@@ -90,7 +90,7 @@ public class TestNoteService {
     public void testGetFilteredNotes() {
         log.debug("entering testGetFilteredNotes");
         List<Note> filteredNotes = noteService.getFilteredNotes(note.getUserId(), List.of("testTag1"),
-                "testCategory", false, "disabled", "", "disabled");
+                "testCategory", false, "disabled", "", "disabled", true, true, true);
         assertTrue(filteredNotes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&
                         savedNote.getContent().equals(note.getContent()) &&

@@ -29,7 +29,7 @@ public class NoteServiceImpl implements NoteService {
     private CategoryService categoryService;
 
     @Override
-    public void saveNote(String title, String content, Long userId, List<String> tags, String categoryName, MultipartFile image) {
+    public void saveNote(String title, String content, Long userId, List<String> tags, String categoryName, MultipartFile image, String link) {
         Note note = new Note();
         note.setTitle(title);
         note.setUserId(userId);
@@ -38,31 +38,35 @@ public class NoteServiceImpl implements NoteService {
         String shareToken = generateToken();
         note.setShareToken(shareToken);
         note.setShareLink(generateLink(shareToken));
+        note.setContent(content);
+
         if (!categoryName.isEmpty()) {
             note.setCategory(categoryService.getCategory(categoryName, userId));
         }
         else {
             note.setCategory(null);
         }
-        try {
-            URL url = new URL(content);
-            note.setContent(url.toExternalForm());
-            note.setType("link");
-        } catch (MalformedURLException e) {
-            if (!image.isEmpty()) {
-//                note.setImageUrl(imageUrl);
-                note.setType("image");
-                try {
-                    note.setImage(image.getBytes());
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                note.setContent("");
-            } else {
-                note.setType("text");
-                note.setContent(content);
+
+        if (!image.isEmpty()) {
+            try {
+                note.setImage(image.getBytes());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         }
+
+        try {
+            URL url = new URL(link);
+            note.setLink(url.toExternalForm());
+        } catch (MalformedURLException ignored) {}
+
+        if (!note.getContent().isEmpty() && note.getLink() == null && note.getImage() == null) {note.setType("text");}
+        if (note.getContent().isEmpty() && note.getLink() != null && note.getImage() == null) {note.setType("link");}
+        if (note.getContent().isEmpty() && note.getLink() == null && note.getImage() != null) {note.setType("image");}
+        if (!note.getContent().isEmpty() && note.getLink() != null && note.getImage() == null) {note.setType("text_link");}
+        if (!note.getContent().isEmpty() && note.getLink() == null && note.getImage() != null) {note.setType("text_image");}
+        if (note.getContent().isEmpty() && note.getLink() != null && note.getImage() != null) {note.setType("link_image");}
+        if (!note.getContent().isEmpty() && note.getLink() != null && note.getImage() != null) {note.setType("text_link_image");}
         repository.save(note);
     }
 
@@ -72,8 +76,17 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, String filterNoteType) {
+    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, String filterNoteType, boolean filterNoteTypeText, boolean filterNoteTypeLink, boolean filterNoteTypeImage) {
         List<Note> filteredNotes = new ArrayList<>();
+        if (filterNoteTypeText && !filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "text";}
+        if (!filterNoteTypeText && filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "link";}
+        if (!filterNoteTypeText && !filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "image";}
+        if (filterNoteTypeText && filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "text_link";}
+        if (filterNoteTypeText && !filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "text_image";}
+        if (!filterNoteTypeText && filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "link_image";}
+        if (filterNoteTypeText && filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "text_link_image";}
+        if (!filterNoteTypeText && !filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "disabled";}
+
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
                 if ((filterNoteType.equals(note.getType()) || filterNoteType.equals("disabled")) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||

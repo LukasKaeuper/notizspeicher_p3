@@ -57,7 +57,7 @@ public class DashboardFormController {
     @PostMapping("/addNote")
     public String saveNote(NoteForm formdata, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
-        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags(), formdata.getCategory(), formdata.getImage());
+        noteService.saveNote(formdata.getTitle(), formdata.getContent(), userId, formdata.getTags(), formdata.getCategory(), formdata.getImage(), formdata.getLink());
         log.debug(formdata.toString());
         return "redirect:/dashboard";
     }
@@ -65,7 +65,7 @@ public class DashboardFormController {
     @PostMapping("/filter")
     public String filter(FilterForm formdata, HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("userId");
-        List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags(), formdata.getFilterDateType(), formdata.getFilterDate(), formdata.getFilterNoteType());
+        List<Note> filteredNotes= noteService.getFilteredNotes(userId, formdata.getFilterTags(), formdata.getFilterCategory(), formdata.isMustContainAllTags(), formdata.getFilterDateType(), formdata.getFilterDate(), formdata.getFilterNoteType(), formdata.isFilterNoteTypeText(), formdata.isFilterNoteTypeLink(), formdata.isFilterNoteTypeImage());
         addAttributes(filteredNotes, session, model, null);
         model.addAttribute("filter", formdata);
         log.debug(formdata.toString());
@@ -117,16 +117,17 @@ public class DashboardFormController {
     private void addAttributes(List<Note> notes, HttpSession session, Model model, String categoryMessage) {
         UserDTO user = (UserDTO) session.getAttribute("user");
         Long userId = (Long) session.getAttribute("userId");
-        List<NoteDTO> NoteDTOs = new ArrayList<>();
-        notes.forEach(note -> {NoteDTOs.add(noteMapper.map(note));});
+        List<NoteDTO> noteDTOs = new ArrayList<>();
+        notes.forEach(note -> {noteDTOs.add(noteMapper.map(note));});
         List<Category> categories = categoryService.getCategoriesByUser(userId);
         List<CategoryDTO> categoryDTOs = new ArrayList<>();
         categories.forEach(category -> categoryDTOs.add(categoryMapper.map(category)));
         model.addAttribute("user", user);
-        model.addAttribute("notes", NoteDTOs);
+        model.addAttribute("notes", noteDTOs);
         model.addAttribute("categories", categoryDTOs);
         model.addAttribute("categoryMessage", categoryMessage);
         //log.debug(NoteDTOs.toString());
-        log.debug(categoryDTOs.toString());
+        //noteDTOs.forEach(noteDTO -> log.debug(noteDTO.type()));
+        log.debug("Categories: " + categoryDTOs.toString());
     }
 }
