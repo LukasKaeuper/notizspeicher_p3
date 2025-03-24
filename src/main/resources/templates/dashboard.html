@@ -78,8 +78,12 @@
             <a th:href="${note.shareLink}" target="_blank">
                 <button>Notiz freigeben</button>
             </a>
-            </div>
+            <form th:object="${note}" style="display: inline">
+                <button th:formaction="@{/delete}" type="submit" th:value="*{id}" name="id">Notiz löschen</button>
+            </form>
+
         </div>
+    </div>
 
     <div>
         <br>

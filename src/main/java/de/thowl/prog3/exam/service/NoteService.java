@@ -18,4 +18,6 @@ public interface NoteService {
     String generateLink(String token);
 
     Note getNoteByToken(String token);
+
+    void deleteNote(Long userId, Long id);
 }

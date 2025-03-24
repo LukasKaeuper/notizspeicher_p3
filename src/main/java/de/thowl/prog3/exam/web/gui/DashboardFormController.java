@@ -17,10 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -106,6 +104,14 @@ public class DashboardFormController {
             model.addAttribute("error", e.getMessage());
             return "error";
         }
+    }
+
+    @GetMapping("/delete")
+    public String deleteNote(HttpSession session, @ModelAttribute Note note){
+        Long userId = (Long) session.getAttribute("userId");
+        noteService.deleteNote(userId, note.getId());
+        log.debug("delete note (noteid: " + note.getId() + ")");
+        return "redirect:/dashboard";
     }
 
     private void addAttributes(List<Note> notes, HttpSession session, Model model, String categoryMessage) {

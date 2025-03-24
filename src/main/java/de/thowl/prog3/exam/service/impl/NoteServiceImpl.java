@@ -120,4 +120,9 @@ public class NoteServiceImpl implements NoteService {
     public Note getNoteByToken(String token){
         return repository.findByShareToken(token).orElseThrow();
     }
+
+    @Override
+    public void deleteNote(Long userId, Long noteId) {
+        repository.deleteById(noteId);
+    }
 }
