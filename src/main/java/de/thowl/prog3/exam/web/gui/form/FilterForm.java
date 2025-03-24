@@ -11,7 +11,6 @@ public class FilterForm {
     private boolean mustContainAllTags;
     private String filterDateType;
     private String filterDate;
-    private String filterNoteType;
     private boolean filterNoteTypeText;
     private boolean filterNoteTypeLink;
     private boolean filterNoteTypeImage;

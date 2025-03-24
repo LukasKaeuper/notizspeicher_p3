@@ -90,7 +90,7 @@ public class TestNoteService {
     public void testGetFilteredNotes() {
         log.debug("entering testGetFilteredNotes");
         List<Note> filteredNotes = noteService.getFilteredNotes(note.getUserId(), List.of("testTag1"),
-                "testCategory", false, "disabled", "", "disabled", true, true, true);
+                "testCategory", false, "disabled", "", true, true, true);
         assertTrue(filteredNotes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&
                         savedNote.getContent().equals(note.getContent()) &&

@@ -51,12 +51,12 @@
             <input type="text" name="link" placeholder="Link"/>
             <br>
             <br>
-            <textarea name="content" placeholder="Text/Link"></textarea>
-            <label for="imageUpload">Bild als Notiz hochladen: </label>
-            <input type="file" id="imageUpload" name="image" accept="image/png, image/jpeg"/>
+            <textarea name="content" placeholder="Text"></textarea>
             <br>
             <br>
             <input type="text" name="tags" placeholder="Schlagwort1,Schlagwort2..."/>
+            <br>
+            <br>
             <label>Kategorie:</label>
             <select name="category">
                 <option selected value=''>Keine Kategorie</option>
@@ -64,7 +64,13 @@
                         th:value="${category.categoryName}"
                         th:text="${category.categoryName}"></option>
             </select>
-            <button type="submit">erstellen</button>
+            <br>
+            <br>
+            <label for="imageUpload">Bild als Hintergrund hochladen: </label>
+            <input type="file" id="imageUpload" name="image" accept="image/png, image/jpeg"/>
+            <br>
+            <br>
+            <button type="submit">Notiz anlegen</button>
         </form>
     </div>
 
@@ -105,25 +111,14 @@
                         th:text="${choice.categoryName}"
                         th:selected="(${choice.categoryName} == *{filter?.filterCategory})"></option>
             </select><br><br>
-            <label>Notiz Inhalt:</label>
-            <label for="filterNoteTypeText">Text</label>
+            <label>Inhalt:</label>
             <input type="checkbox" name="filterNoteTypeText" id="filterNoteTypeText" th:checked="${filter?.filterNoteTypeText}">
-            <label for="filterNoteTypeLink">Link</label>
+            <label for="filterNoteTypeText">Text</label>
             <input type="checkbox" name="filterNoteTypeLink" id="filterNoteTypeLink" th:checked="${filter?.filterNoteTypeLink}">
-            <label for="filterNoteTypeImage">Bild</label>
+            <label for="filterNoteTypeLink">Link</label>
             <input type="checkbox" name="filterNoteTypeImage" id="filterNoteTypeImage" th:checked="${filter?.filterNoteTypeImage}">
+            <label for="filterNoteTypeImage">Bild</label>
             <br><br>
-            <label for="filterNoteType">Notiz Typ:</label>
-            <select id="filterNoteType" name="filterNoteType">
-                <option selected value="disabled">Nicht Filtern</option>
-                <option th:selected="${filter?.filterNoteType} == 'text'" value="text">Text</option>
-                <option th:selected="${filter?.filterNoteType} == 'link'" value="link">Link</option>
-                <option th:selected="${filter?.filterNoteType} == 'image'" value="image">Bild</option>
-                <option th:selected="${filter?.filterNoteType} == 'text_link'" value="text_link">Text & Link</option>
-                <option th:selected="${filter?.filterNoteType} == 'text_image'" value="text_image">Text & Bild</option>
-                <option th:selected="${filter?.filterNoteType} == 'link_image'" value="link_image">Link & Bild</option>
-                <option th:selected="${filter?.filterNoteType} == 'text_link_image'" value="text_link_image">Text & Link & Bild</option>
-            </select><br><br>
             <label for="filterDateType">Datum:</label>
             <select id="filterDateType" name="filterDateType">
                 <option selected value="disabled">Nicht Filtern</option>

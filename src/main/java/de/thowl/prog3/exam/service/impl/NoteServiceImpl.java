@@ -76,8 +76,9 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, String filterNoteType, boolean filterNoteTypeText, boolean filterNoteTypeLink, boolean filterNoteTypeImage) {
+    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, boolean filterNoteTypeText, boolean filterNoteTypeLink, boolean filterNoteTypeImage) {
         List<Note> filteredNotes = new ArrayList<>();
+        String filterNoteType = "disabled";
         if (filterNoteTypeText && !filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "text";}
         if (!filterNoteTypeText && filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "link";}
         if (!filterNoteTypeText && !filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "image";}
@@ -85,7 +86,7 @@ public class NoteServiceImpl implements NoteService {
         if (filterNoteTypeText && !filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "text_image";}
         if (!filterNoteTypeText && filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "link_image";}
         if (filterNoteTypeText && filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "text_link_image";}
-        if (!filterNoteTypeText && !filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "disabled";}
+        //if (!filterNoteTypeText && !filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "disabled";}
 
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
