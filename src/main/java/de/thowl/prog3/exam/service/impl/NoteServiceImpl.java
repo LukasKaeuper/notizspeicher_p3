@@ -67,6 +67,7 @@ public class NoteServiceImpl implements NoteService {
         if (!note.getContent().isEmpty() && note.getLink() == null && note.getImage() != null) {note.setType("text_image");}
         if (note.getContent().isEmpty() && note.getLink() != null && note.getImage() != null) {note.setType("link_image");}
         if (!note.getContent().isEmpty() && note.getLink() != null && note.getImage() != null) {note.setType("text_link_image");}
+        if (note.getContent().isEmpty() && note.getLink() == null && note.getImage() == null) {note.setType("empty");}
         repository.save(note);
     }
 
