@@ -1,7 +1,6 @@
 package de.thowl.prog3.exam.security.filter;
 
 import de.thowl.prog3.exam.service.SessionService;
-import de.thowl.prog3.exam.storage.entities.Session;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
@@ -12,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
 /**
- * Die Klasse AuthenticationFilter ist für die Authentifizierung der Anfragen zuständig.
- * Sie überprueft, ob ein gültiger SessionToken für die geschuetzen URLs vorhanden ist.
+ * Die Klasse AuthenticationFilter ist für die Authentifizierung der Anfragen zustaendig.
+ * Sie ueberprueft, ob ein gueltiger SessionToken für die geschuetzen URLs vorhanden ist.
  * Diese Klasse wurde mit Unterstuetzung von Copilot geschrieben.
  */
 @Slf4j

@@ -10,7 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,7 +48,9 @@ public class TestNoteService {
         note.setContent("testContent");
         note.setUserId(4L);
         note.setTags(List.of("testTag1", "testTag2"));
+        note.setType("text_link_image");
         note.setCategory(category);
+        note.setLink("https://test.com");
         noteRepository.save(note);
         return note;
     }
@@ -62,13 +67,17 @@ public class TestNoteService {
     @DisplayName("Should save a note")
     public void testSaveNote() {
         log.debug("entering testSaveNote");
-        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName(), null, note.getLink());
+        byte[] testImageData = {0x1, 0x2, 0x3};
+        MultipartFile file = new MockMultipartFile("empty", testImageData);
+        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName(), file, note.getLink());
         List<Note> notes = noteRepository.findByUserId(note.getUserId());
         assertTrue(notes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&
                         savedNote.getContent().equals(note.getContent()) &&
                         savedNote.getTags().containsAll(note.getTags()) &&
-                        savedNote.getCategory().getCategoryName().equals(note.getCategory().getCategoryName())
+                        savedNote.getCategory().getCategoryName().equals(note.getCategory().getCategoryName()) &&
+                        Arrays.equals(savedNote.getImage(), testImageData) &&
+                        savedNote.getLink().equals(note.getLink())
         ), "Note should be saved correctly");
     }
 
@@ -95,6 +104,7 @@ public class TestNoteService {
                         savedNote.getTitle().equals(note.getTitle()) &&
                         savedNote.getContent().equals(note.getContent()) &&
                         savedNote.getTags().containsAll(note.getTags()) &&
+                        savedNote.getType().equals(note.getType()) &&
                         savedNote.getCategory().getCategoryName().equals(note.getCategory().getCategoryName())
         ), "List of filtered notes should not be empty");
     }
