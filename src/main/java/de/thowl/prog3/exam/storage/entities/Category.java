@@ -19,6 +19,7 @@ public class Category {
     @GeneratedValue
     private Long id;
 
+    @Column(name = "userId")
     private Long userId;
 
     @Column(name = "categoryName")
