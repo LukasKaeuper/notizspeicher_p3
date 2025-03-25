@@ -8,11 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -65,8 +62,7 @@ public class TestNoteService {
     @DisplayName("Should save a note")
     public void testSaveNote() {
         log.debug("entering testSaveNote");
-        MultipartFile multipartFile = new MockMultipartFile("empty", new byte[0]);
-        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName(), multipartFile );
+        noteService.saveNote(note.getTitle(), note.getContent(), note.getUserId(), note.getTags(), category.getCategoryName(), null, note.getLink());
         List<Note> notes = noteRepository.findByUserId(note.getUserId());
         assertTrue(notes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&
@@ -94,7 +90,7 @@ public class TestNoteService {
     public void testGetFilteredNotes() {
         log.debug("entering testGetFilteredNotes");
         List<Note> filteredNotes = noteService.getFilteredNotes(note.getUserId(), List.of("testTag1"),
-                "testCategory", false, "disabled", "", "disabled");
+                "testCategory", false, "disabled", "", true, true, true, "");
         assertTrue(filteredNotes.stream().anyMatch(savedNote ->
                         savedNote.getTitle().equals(note.getTitle()) &&
                         savedNote.getContent().equals(note.getContent()) &&

@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class NoteForm {
     private String title;
+    private String link;
     private String content;
     private List<String> tags;
     private String category;

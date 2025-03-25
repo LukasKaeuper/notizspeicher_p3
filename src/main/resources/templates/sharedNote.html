@@ -6,9 +6,10 @@
         padding: 10px;
         margin: 10px;
         width: 200px;
-        height: 250px;
         display: inline-block;
         vertical-align: top;
+        background-size: contain;
+        background-repeat: no-repeat;
     }
     .note-title {
         font-weight: bold;
@@ -17,6 +18,7 @@
     .note-content {
         margin-top: 10px;
         font-family: "Comic Sans MS";
+        white-space: pre-wrap;
     }
 </style>
 <head>
@@ -24,13 +26,13 @@
 </head>
 <body>
 <h1>Geteilte Notiz</h1>
-<div class="note" th:style="${'background: ' + note.categoryColour}">
-    <a th:if="${note.type == 'link'}" class="note-title" th:text="${note.title}" th:href="${note.content}" target="_blank">Note Title</a>
-    <p th:unless="${note.type == 'link'}" class="note-title" th:text="${note.title}">Note Title</p>
-    <p th:unless="${note.type == 'link'}" class="note-content" th:text="${note.content}">Note Content</p>
-    <p th:text="${note.tags}">Tags</p>
-    <p th:text="${note.category}">Kategorie</p>
-    <p th:text="${note.createdAt}">Erstellungsdatum</p>
+<div class="note" th:styleappend="${note.type == 'image' || note.type == 'text_image' || note.type == 'link_image' || note.type == 'text_link_image' ? note.image : 'background: ' + note.categoryColour}">
+    <a th:if="${note.type == 'link' || note.type == 'text_link' || note.type == 'link_image' || note.type == 'text_link_image'}" class="note-title" th:text="${note.title}" th:href="${note.link}" target="_blank">Note Title</a>
+    <p th:unless="${note.type == 'link' || note.type == 'text_link' || note.type == 'link_image' || note.type == 'text_link_image'}" class="note-title" th:text="${note.title}">Note Title</p>
+    <p class="note-content" th:text="${note.content}">Note Content</p><br><br>
+    <p th:if="${!note.tags.isEmpty()}" class="note-tags" th:text="${note.tags}">Note Tags</p>
+    <p class="note-category" th:text="${note.category}">Note Category</p>
+    <p class="note-createdAt" th:text="${note.createdAt}">Note Creation Time</p>
 </div>
 </body>
 </html>

@@ -47,6 +47,8 @@ public class Note {
     @Lob
     private byte[] image;
 
+    private String link;
+
 //    @ElementCollection
 //    private List<Note> subNotes;
 }

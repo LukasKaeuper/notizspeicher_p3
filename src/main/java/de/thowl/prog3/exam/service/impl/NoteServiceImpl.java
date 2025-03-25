@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +26,7 @@ public class NoteServiceImpl implements NoteService {
     private CategoryService categoryService;
 
     @Override
-    public void saveNote(String title, String content, Long userId, List<String> tags, String categoryName, MultipartFile image) {
+    public void saveNote(String title, String content, Long userId, List<String> tags, String categoryName, MultipartFile image, String link) {
         Note note = new Note();
         note.setTitle(title);
         note.setUserId(userId);
@@ -38,31 +35,36 @@ public class NoteServiceImpl implements NoteService {
         String shareToken = generateToken();
         note.setShareToken(shareToken);
         note.setShareLink(generateLink(shareToken));
+        note.setContent(content);
+
         if (!categoryName.isEmpty()) {
             note.setCategory(categoryService.getCategory(categoryName, userId));
         }
         else {
             note.setCategory(null);
         }
-        try {
-            URL url = new URL(content);
-            note.setContent(url.toExternalForm());
-            note.setType("link");
-        } catch (MalformedURLException e) {
-            if (!image.isEmpty()) {
-//                note.setImageUrl(imageUrl);
-                note.setType("image");
-                try {
-                    note.setImage(image.getBytes());
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                note.setContent("");
-            } else {
-                note.setType("text");
-                note.setContent(content);
+
+        if (!image.isEmpty()) {
+            try {
+                note.setImage(image.getBytes());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         }
+
+        try {
+            URL url = new URL(link);
+            note.setLink(url.toExternalForm());
+        } catch (MalformedURLException ignored) {}
+
+        if (!note.getContent().isEmpty() && note.getLink() == null && note.getImage() == null) {note.setType("text");}
+        if (note.getContent().isEmpty() && note.getLink() != null && note.getImage() == null) {note.setType("link");}
+        if (note.getContent().isEmpty() && note.getLink() == null && note.getImage() != null) {note.setType("image");}
+        if (!note.getContent().isEmpty() && note.getLink() != null && note.getImage() == null) {note.setType("text_link");}
+        if (!note.getContent().isEmpty() && note.getLink() == null && note.getImage() != null) {note.setType("text_image");}
+        if (note.getContent().isEmpty() && note.getLink() != null && note.getImage() != null) {note.setType("link_image");}
+        if (!note.getContent().isEmpty() && note.getLink() != null && note.getImage() != null) {note.setType("text_link_image");}
+        if (note.getContent().isEmpty() && note.getLink() == null && note.getImage() == null) {note.setType("empty");}
         repository.save(note);
     }
 
@@ -72,17 +74,26 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, String filterNoteType) {
+    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, boolean filterNoteTypeText, boolean filterNoteTypeLink, boolean filterNoteTypeImage, String sortBy) {
         List<Note> filteredNotes = new ArrayList<>();
+        String filterNoteType = "disabled";
+        if (filterNoteTypeText && !filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "text";}
+        if (!filterNoteTypeText && filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "link";}
+        if (!filterNoteTypeText && !filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "image";}
+        if (filterNoteTypeText && filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "text_link";}
+        if (filterNoteTypeText && !filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "text_image";}
+        if (!filterNoteTypeText && filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "link_image";}
+        if (filterNoteTypeText && filterNoteTypeLink && filterNoteTypeImage) {filterNoteType = "text_link_image";}
+
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
-                if ((filterNoteType.equals(note.getType()) || filterNoteType.equals("disabled")) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
+                if ((checkFilterNoteType(filterNoteType, note.getType())) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
                         (!filterTags.isEmpty() && note.getTags().containsAll(filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())))) {
                     filteredNotes.add(note);
                 }
             }
             else{
-                if ((filterNoteType.equals(note.getType()) || filterNoteType.equals("disabled")) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
+                if ((checkFilterNoteType(filterNoteType, note.getType())) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
                         (!filterTags.isEmpty() && !Collections.disjoint(note.getTags(), filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())))) {
                     filteredNotes.add(note);
                 }
@@ -102,8 +113,41 @@ public class NoteServiceImpl implements NoteService {
                         break;
                 }
             }
+            switch (sortBy){
+                case "createdAtAscending":
+                    filteredNotes.sort((o1, o2) -> o1.getCreatedAt().compareTo(o2.getCreatedAt()));
+                    break;
+                case "createdAtDescending":
+                    filteredNotes.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
+                    break;
+                case "category":
+                    filteredNotes.sort(new Comparator<Note>() {
+                        @Override
+                        public int compare(Note o1, Note o2) {
+                            if (o1.getCategory() == null && o2.getCategory() != null) {return 1;}
+                            if (o1.getCategory() != null && o2.getCategory() == null) {return -1;}
+                            if (o1.getCategory() == null && o2.getCategory() == null) {return 0;}
+                            return o1.getCategory().getCategoryName().compareTo(o2.getCategory().getCategoryName());
+                        }
+                    });
+                    break;
+            }
         }
         return filteredNotes;
+    }
+
+    private boolean checkFilterNoteType(String filterNoteType, String noteType){
+        return switch (filterNoteType) {
+            case "disabled" -> true;
+            case "text" -> noteType.equals("text");
+            case "link" -> noteType.equals("link");
+            case "image" -> noteType.equals("image");
+            case "text_link" -> noteType.equals("text_link") || noteType.equals("text") || noteType.equals("link");
+            case "text_image" -> noteType.equals("text_image") || noteType.equals("text") || noteType.equals("image");
+            case "link_image" -> noteType.equals("link_image") || noteType.equals("link") || noteType.equals("image");
+            case "text_link_image" -> noteType.equals("text_link_image");
+            default -> false;
+        };
     }
 
     @Override
@@ -119,5 +163,10 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public Note getNoteByToken(String token){
         return repository.findByShareToken(token).orElseThrow();
+    }
+
+    @Override
+    public void deleteNote(Long userId, Long noteId) {
+        repository.deleteById(noteId);
     }
 }
