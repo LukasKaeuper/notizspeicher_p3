@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Notizspeicher - Anmelden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+            margin: 0;
+            flex-direction: column;
+            font-family: 'Roboto', sans-serif;
+        }
+        .move-right {
+            margin-left: 35px;
+        }
+        .center-button {
+            display: flex;
+            margin: 20px auto;
+        }
+        .message {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <img th:src="@{/img/thowl_logo.png}" />
+    <h1>Anmelden</h1>
+
+    <form class="form" method="POST" action="/login">
+        <label for="uname">Benutzername:</label>
+        <input type="text" id="uname" name="username" required/>
+        <br>
+        <br>
+        <label for="pwd" class="move-right">Passwort:</label>
+        <input type="password" id="pwd" name="password" required/>
+        <br>
+        <br>
+        <input type="submit" value="Anmelden" class="center-button"/>
+    </form>
+    <br>
+    <br>
+    <a href="/register">Noch kein Konto? Jetzt registrieren.</a>
+    <br>
+    <br>
+    <div th:if="${message}" th:text="${message}" class="message"></div>
+
+</body>
+</html>

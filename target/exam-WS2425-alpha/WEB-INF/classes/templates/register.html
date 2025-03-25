@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Notizspeicher - Registrieren</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+            margin: 0;
+            flex-direction: column;
+            font-family: 'Roboto', sans-serif;
+        }
+        .move-right-password {
+            margin-left: 36px;
+        }
+        .move-right-mail {
+            margin-left: 58px;
+        }
+        .center-button {
+            display: flex;
+            margin: 20px auto;
+        }
+        .message {
+            color: green;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <img th:src="@{/img/thowl_logo.png}" />
+    <h1>Konto erstellen</h1>
+
+    <form class="form" method="POST" action="/register">
+        <label for="uname">Benutzername:</label>
+        <input type="text" id="uname" name="username" required/>
+        <br>
+        <br>
+        <label for="pwd" class="move-right-password">Passwort:</label>
+        <input type="password" id="pwd" name="password" required/>
+        <br>
+        <br>
+        <label for="mail" class="move-right-mail">E-Mail:</label>
+        <input type="email" id="mail" name="email" required/>
+        <br>
+        <br>
+        <input type="submit" value="Registrieren" class="center-button"/>
+    </form>
+    <br>
+    <br>
+    <a href="/login">Sie besitzen bereits ein Konto? Jetzt anmelden.</a>
+    <br>
+    <br>
+    <div th:if="${errorMessage}" th:text="${errorMessage}" class="error"></div>
+    <div th:if="${message}" th:text="${message}" class="message"></div>
+
+</body>
+</html>

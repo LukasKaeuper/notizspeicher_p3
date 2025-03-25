@@ -1,0 +1,9 @@
+de\thowl\prog3\exam\service\TestUserService.class
+de\thowl\prog3\exam\controller\TestLoginFormController.class
+de\thowl\prog3\exam\service\TestNoteService.class
+de\thowl\prog3\exam\controller\TestDashboardFormController.class
+de\thowl\prog3\exam\controller\TestRegisterFormController.class
+de\thowl\prog3\exam\service\TestSessionService.class
+de\thowl\prog3\exam\storage\TestSessionRepository.class
+de\thowl\prog3\exam\storage\TestUserRepository.class
+de\thowl\prog3\exam\storage\TestNoteRepository.class
