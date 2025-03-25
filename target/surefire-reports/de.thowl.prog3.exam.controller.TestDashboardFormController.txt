@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: de.thowl.prog3.exam.controller.TestDashboardFormController
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.983 s -- in de.thowl.prog3.exam.controller.TestDashboardFormController
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.623 s -- in de.thowl.prog3.exam.controller.TestDashboardFormController
