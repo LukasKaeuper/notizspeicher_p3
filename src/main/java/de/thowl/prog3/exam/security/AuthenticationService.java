@@ -8,7 +8,7 @@ public interface AuthenticationService {
 
     AccessToken login(String username, String password) throws InvalidCredentialsException;
 
-    boolean logout(AccessToken acc);
+    void logout(String token);
 
     String register(String username, String email, String password);
 }

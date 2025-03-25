@@ -26,7 +26,6 @@ public class SessionServiceImpl implements SessionService {
             Session session = new Session(token, user);
             sessionRepository.save(session);
         }
-
     }
 
     @Override
@@ -37,10 +36,5 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Session getSessionByToken(String token) {
         return sessionRepository.findByToken(token);
-    }
-
-    @Override
-    public void setCurrentToken(String token) {
-        Session.currentToken = token;
     }
 }

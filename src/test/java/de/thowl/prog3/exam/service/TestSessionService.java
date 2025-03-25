@@ -91,12 +91,4 @@ public class TestSessionService {
         Session foundSession = sessionService.getSessionByToken(session.getToken());
         assertTrue(foundSession != null, "Session should be found");
     }
-
-    @Test
-    @DisplayName("Should set current token correctly")
-    public void testSetCurrentToken() {
-        log.debug("entering testSetCurrentToken");
-        sessionService.setCurrentToken(session.getToken());
-        assertTrue(Session.currentToken.equals(session.getToken()), "Current token should be set");
-    }
 }

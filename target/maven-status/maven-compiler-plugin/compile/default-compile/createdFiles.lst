@@ -1,0 +1,10 @@
+de\thowl\prog3\exam\security\InvalidCredentialsException.class
+de\thowl\prog3\exam\security\entities\AccessToken.class
+de\thowl\prog3\exam\service\SessionService.class
+de\thowl\prog3\exam\ExamApplication.class
+de\thowl\prog3\exam\ServletInitializer.class
+de\thowl\prog3\exam\security\config\SecurityConfig.class
+de\thowl\prog3\exam\security\AuthenticationService.class
+de\thowl\prog3\exam\security\filter\AuthenticationFilter.class
+de\thowl\prog3\exam\storage\entities\User.class
+de\thowl\prog3\exam\security\config\WebConfig.class

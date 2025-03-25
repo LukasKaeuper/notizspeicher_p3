@@ -1,6 +1,7 @@
 package de.thowl.prog3.exam.web.gui;
 
 import de.thowl.prog3.exam.security.AuthenticationService;
+import de.thowl.prog3.exam.security.entities.AccessToken;
 import de.thowl.prog3.exam.web.dto.UserDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,8 @@ public class LoginFormController {
                 session.setAttribute("user", userDTO);
                 session.setAttribute("userId", userDTO.id());
                 log.debug("User is valid, attempting to login");
-                auth.login(username, password);
+                AccessToken token = auth.login(username, password);
+                session.setAttribute("token", token.getUSID());
                 target = "redirect:/dashboard"; // SUCCESS LANE
             } else {
                 log.error("invalid user data");

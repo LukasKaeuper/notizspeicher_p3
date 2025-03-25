@@ -4,6 +4,9 @@ import java.util.Date;
 
 import lombok.Data;
 
+/**
+ * Die Klasse AccessToken repraesentiert einen Zugriffstoken.
+ */
 @Data
 public class AccessToken {
     private String USID; // unique session id

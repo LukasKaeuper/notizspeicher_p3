@@ -28,10 +28,8 @@ public class TestDashboardFormController {
                 .andReturn()
                 .getRequest()
                 .getSession();
-
-        // Teste den Zugriff auf das Dashboard mit angemeldetem Benutzer
         mockMvc.perform(get("/dashboard").session((MockHttpSession) session))
-                .andExpect(status().isOk()) // Erwarte HTTP 200 (OK)
+                .andExpect(status().isOk())
                 .andExpect(view().name("/dashboard"));
     }
 }
