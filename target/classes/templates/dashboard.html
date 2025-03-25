@@ -25,6 +25,16 @@
         }
         .add-note {
             margin: 20px 0;
+            margin-right: 100px;
+        }
+        .control-container {
+            display: flex;
+            flex-direction: row;
+        }
+        @media (max-width: 800px) {
+            .control-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -44,38 +54,82 @@
         </form>
     </div>
 
-    <h2>Neue Notiz erstellen</h2>
-    <div class="add-note">
-        <form action="/addNote" method="post" enctype="multipart/form-data">
-            <input type="text" name="title" placeholder="Titel" required/>
+    <div class="control-container">
+        <div class="add-note">
+            <h2>Neue Notiz erstellen</h2>
+            <form action="/addNote" method="post" enctype="multipart/form-data">
+                <input type="text" name="title" placeholder="Titel" required/>
+                <br>
+                <br>
+                <input type="text" name="link" placeholder="Link"/>
+                <br>
+                <br>
+                <textarea name="content" placeholder="Text"></textarea>
+                <br>
+                <br>
+                <input type="text" name="tags" placeholder="Schlagwort1,Schlagwort2..."/>
+                <br>
+                <br>
+                <label>Kategorie:</label>
+                <select name="category">
+                    <option selected value=''>Keine Kategorie</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.categoryName}"
+                            th:text="${category.categoryName}"></option>
+                </select>
+                <br>
+                <br>
+                <label for="imageUpload">Bild als Hintergrund hochladen: </label>
+                <br>
+                <input type="file" id="imageUpload" name="image" accept="image/png, image/jpeg"/>
+                <br>
+                <br>
+                <button type="submit">Notiz anlegen</button>
+            </form>
+        </div>
+        <div>
             <br>
-            <br>
-            <input type="text" name="link" placeholder="Link"/>
-            <br>
-            <br>
-            <textarea name="content" placeholder="Text"></textarea>
-            <br>
-            <br>
-            <input type="text" name="tags" placeholder="Schlagwort1,Schlagwort2..."/>
-            <br>
-            <br>
-            <label>Kategorie:</label>
-            <select name="category">
-                <option selected value=''>Keine Kategorie</option>
-                <option th:each="category : ${categories}"
-                        th:value="${category.categoryName}"
-                        th:text="${category.categoryName}"></option>
-            </select>
-            <br>
-            <br>
-            <label for="imageUpload">Bild als Hintergrund hochladen: </label>
-            <input type="file" id="imageUpload" name="image" accept="image/png, image/jpeg"/>
-            <br>
-            <br>
-            <button type="submit">Notiz anlegen</button>
-        </form>
+            <h2>Filter</h2>
+            <form method="post">
+                <input type="text" name="filterTags" placeholder="Schlagwort1,Schlagwort2..." th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
+                <input type="checkbox" name="mustContainAllTags" id="mustContainAllTags" th:checked="${filter?.mustContainAllTags}">
+                <label for="mustContainAllTags">Muss alle Schlagwörter enthalten</label><br><br>
+                <label for="filterCategory">Kategorie:</label>
+                <select id="filterCategory" name="filterCategory">
+                    <option value='disabled'>Nicht Filtern</option>
+                    <option th:selected="${filter?.filterCategory} == ''" value=''>Keine Kategorie</option>
+                    <option th:each="choice : ${categories}"
+                            th:value="${choice.categoryName}"
+                            th:text="${choice.categoryName}"
+                            th:selected="(${choice.categoryName} == *{filter?.filterCategory})"></option>
+                </select><br><br>
+                <label>Inhalt:</label>
+                <input type="checkbox" name="filterNoteTypeText" id="filterNoteTypeText" th:checked="${filter?.filterNoteTypeText}">
+                <label for="filterNoteTypeText">Text</label>
+                <input type="checkbox" name="filterNoteTypeLink" id="filterNoteTypeLink" th:checked="${filter?.filterNoteTypeLink}">
+                <label for="filterNoteTypeLink">Link</label>
+                <input type="checkbox" name="filterNoteTypeImage" id="filterNoteTypeImage" th:checked="${filter?.filterNoteTypeImage}">
+                <label for="filterNoteTypeImage">Bild</label>
+                <br><br>
+                <label for="filterDateType">Datum:</label>
+                <select id="filterDateType" name="filterDateType">
+                    <option selected value="disabled">Nicht Filtern</option>
+                    <option th:selected="${filter?.filterDateType} == 'before'" value="before">Vor:</option>
+                    <option th:selected="${filter?.filterDateType} == 'after'" value="after">Nach:</option>
+                </select>
+                <input type="datetime-local" name="filterDate" th:value="${filter?.filterDate}">
+                <br><br>
+                <label for="sortBy">Sortieren:</label>
+                <select id="sortBy" name="sortBy">
+                    <option th:selected="${filter?.sortBy} == 'createdAtAscending'" value="createdAtAscending">alt -> neu</option>
+                    <option th:selected="${filter?.sortBy} == 'createdAtDescending'" value="createdAtDescending">neu -> alt</option>
+                    <option th:selected="${filter?.sortBy} == 'category'" value="category">Kategorie</option>
+                </select><br><br>
+                <button type="submit" formaction="/filter">Filtern</button>
+                <button type="submit" formaction="/resetFilter">Filter zurücksetzen</button>
+            </form>
+        </div>
     </div>
-
     <div>
         <h2>Deine Notizen</h2>
         <div th:each="note, iterStat : ${notes}" class="note" th:styleappend="${note.type == 'image' || note.type == 'text_image' || note.type == 'link_image' || note.type == 'text_link_image' ? note.image : 'background: ' + note.categoryColour}">
@@ -94,50 +148,6 @@
             </form>
 
         </div>
-    </div>
-
-    <div>
-        <br>
-        <br>
-        <h2>Filter</h2>
-        <form method="post">
-            <input type="text" name="filterTags" placeholder="Schlagwort1,Schlagwort2..." th:value="${#strings?.listJoin(filter?.filterTags, ',')}"/>
-            <input type="checkbox" name="mustContainAllTags" id="mustContainAllTags" th:checked="${filter?.mustContainAllTags}">
-            <label for="mustContainAllTags">Muss alle Schlagwörter enthalten</label><br><br>
-            <label for="filterCategory">Kategorie:</label>
-            <select id="filterCategory" name="filterCategory">
-                <option value='disabled'>Nicht Filtern</option>
-                <option th:selected="${filter?.filterCategory} == ''" value=''>Keine Kategorie</option>
-                <option th:each="choice : ${categories}"
-                        th:value="${choice.categoryName}"
-                        th:text="${choice.categoryName}"
-                        th:selected="(${choice.categoryName} == *{filter?.filterCategory})"></option>
-            </select><br><br>
-            <label>Inhalt:</label>
-            <input type="checkbox" name="filterNoteTypeText" id="filterNoteTypeText" th:checked="${filter?.filterNoteTypeText}">
-            <label for="filterNoteTypeText">Text</label>
-            <input type="checkbox" name="filterNoteTypeLink" id="filterNoteTypeLink" th:checked="${filter?.filterNoteTypeLink}">
-            <label for="filterNoteTypeLink">Link</label>
-            <input type="checkbox" name="filterNoteTypeImage" id="filterNoteTypeImage" th:checked="${filter?.filterNoteTypeImage}">
-            <label for="filterNoteTypeImage">Bild</label>
-            <br><br>
-            <label for="filterDateType">Datum:</label>
-            <select id="filterDateType" name="filterDateType">
-                <option selected value="disabled">Nicht Filtern</option>
-                <option th:selected="${filter?.filterDateType} == 'before'" value="before">Vor:</option>
-                <option th:selected="${filter?.filterDateType} == 'after'" value="after">Nach:</option>
-            </select>
-            <input type="datetime-local" name="filterDate" th:value="${filter?.filterDate}">
-            <br><br>
-            <label for="sortBy">Sortieren:</label>
-            <select id="sortBy" name="sortBy">
-                <option th:selected="${filter?.sortBy} == 'createdAtAscending'" value="createdAtAscending">alt -> neu</option>
-                <option th:selected="${filter?.sortBy} == 'createdAtDescending'" value="createdAtDescending">neu -> alt</option>
-                <option th:selected="${filter?.sortBy} == 'category'" value="category">Kategorie</option>
-            </select><br><br>
-            <button type="submit" formaction="/filter">Filtern</button>
-            <button type="submit" formaction="/resetFilter">Filter zurücksetzen</button>
-        </form>
     </div>
     <br>
     <br>
