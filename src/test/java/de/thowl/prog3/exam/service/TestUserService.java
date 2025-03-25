@@ -1,11 +1,8 @@
 package de.thowl.prog3.exam.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,31 +11,35 @@ import org.springframework.boot.test.context.SpringBootTest;
 import de.thowl.prog3.exam.storage.entities.User;
 import lombok.extern.slf4j.Slf4j;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @Slf4j
 @SpringBootTest
 public class TestUserService {
 
-    private final String ADMIN_USER_NAME = "admin";
-
     @Autowired
     private UserService svc;
 
-    @Test
-    @DisplayName("Should not throw an exception")
-    public void testGetUserById() {
-        log.debug("entering testGetUserById");
-        assertDoesNotThrow(() -> {
-            this.svc.getUser(1);
-        });
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        user = createUser();
+    }
+
+    private User createUser(){
+        user = new User();
+        user.setName("TestUser");
+        user.setPassword("TestPassword");
+        return user;
     }
 
     @Test
-    @DisplayName("Should not throw an exception")
-    public void testGetUser() {
-        log.debug("entering testGetUser");
-        assertDoesNotThrow(() -> {
-            this.svc.getUser(ADMIN_USER_NAME);
-        });
+    @DisplayName("Should find user by Name")
+    public void testGetUserByName() {
+        log.debug("entering testGetUserByName");
+        svc.saveUser(user);
+        assertTrue(user.getName().equals("TestUser"));
     }
 
     @Test
