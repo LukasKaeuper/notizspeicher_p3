@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,7 +74,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, boolean filterNoteTypeText, boolean filterNoteTypeLink, boolean filterNoteTypeImage) {
+    public List<Note> getFilteredNotes(Long userId, List<String> filterTags, String filterCategory, boolean mustContainAllTags, String filterDateType, String filterDate, boolean filterNoteTypeText, boolean filterNoteTypeLink, boolean filterNoteTypeImage, String sortBy) {
         List<Note> filteredNotes = new ArrayList<>();
         String filterNoteType = "disabled";
         if (filterNoteTypeText && !filterNoteTypeLink && !filterNoteTypeImage) {filterNoteType = "text";}
@@ -115,6 +112,25 @@ public class NoteServiceImpl implements NoteService {
                         }
                         break;
                 }
+            }
+            switch (sortBy){
+                case "createdAtAscending":
+                    filteredNotes.sort((o1, o2) -> o1.getCreatedAt().compareTo(o2.getCreatedAt()));
+                    break;
+                case "createdAtDescending":
+                    filteredNotes.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
+                    break;
+                case "category":
+                    filteredNotes.sort(new Comparator<Note>() {
+                        @Override
+                        public int compare(Note o1, Note o2) {
+                            if (o1.getCategory() == null && o2.getCategory() != null) {return 1;}
+                            if (o1.getCategory() != null && o2.getCategory() == null) {return -1;}
+                            if (o1.getCategory() == null && o2.getCategory() == null) {return 0;}
+                            return o1.getCategory().getCategoryName().compareTo(o2.getCategory().getCategoryName());
+                        }
+                    });
+                    break;
             }
         }
         return filteredNotes;

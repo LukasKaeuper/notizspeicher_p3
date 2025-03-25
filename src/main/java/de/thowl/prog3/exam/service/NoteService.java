@@ -11,7 +11,7 @@ public interface NoteService {
 
     List<Note> getNotesByUser(Long userId);
 
-    List<Note> getFilteredNotes(Long userId, List<String> tags, String category, boolean mustContainAllTags, String filterDateType, String filterDate, boolean filterNoteTypeText, boolean filterNoteTypeLink, boolean filterNoteTypeImage);
+    List<Note> getFilteredNotes(Long userId, List<String> tags, String category, boolean mustContainAllTags, String filterDateType, String filterDate, boolean filterNoteTypeText, boolean filterNoteTypeLink, boolean filterNoteTypeImage, String sortBy);
 
     String generateToken();
 

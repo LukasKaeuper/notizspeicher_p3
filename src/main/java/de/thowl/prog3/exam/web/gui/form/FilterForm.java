@@ -14,4 +14,5 @@ public class FilterForm {
     private boolean filterNoteTypeText;
     private boolean filterNoteTypeLink;
     private boolean filterNoteTypeImage;
+    private String sortBy;
 }
