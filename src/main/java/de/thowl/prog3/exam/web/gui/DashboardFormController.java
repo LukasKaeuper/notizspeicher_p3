@@ -42,7 +42,7 @@ public class DashboardFormController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/dashboard")
+    @GetMapping("/dashboard") //@RequestParam Idee von StackOverflow
     public String showDashboard(HttpSession session, Model model, @RequestParam(required = false) String categoryMessage) {
         UserDTO user = (UserDTO) session.getAttribute("user");
         Long userId = (Long) session.getAttribute("userId");
@@ -73,12 +73,12 @@ public class DashboardFormController {
     }
 
     @PostMapping("/resetFilter")
-    public String resetFilter(HttpSession session, Model model) {
+    public String resetFilter() {
         return "redirect:/dashboard";
     }
 
     @PostMapping("/addCategory")
-    public String addCategory(CategoryForm formdata, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+    public String addCategory(CategoryForm formdata, HttpSession session, RedirectAttributes redirectAttributes) {
         Long userId = (Long) session.getAttribute("userId");
         switch(categoryService.saveCategory(formdata.getCategoryName(), userId, formdata.getCategoryColour())) {
             case "Category created":
@@ -106,7 +106,7 @@ public class DashboardFormController {
         }
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/delete") //@ModelAttribute Idee von StackOverflow
     public String deleteNote(HttpSession session, @ModelAttribute Note note){
         Long userId = (Long) session.getAttribute("userId");
         noteService.deleteNote(userId, note.getId());

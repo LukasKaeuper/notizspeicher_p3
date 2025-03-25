@@ -27,6 +27,7 @@ public class Note {
 
     private Long userId;
 
+    //Loesung mit @ElementCollection von StackOverflow
     @ElementCollection(fetch = FetchType.EAGER) // Sammlung soll immer geladen werden
     @CollectionTable(name = "my_tags", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "tags")
@@ -45,11 +46,9 @@ public class Note {
 
     private String type;
 
+    //Loesung mit @Lob von StackOverflow
     @Lob
     private byte[] image;
 
     private String link;
-
-//    @ElementCollection
-//    private List<Note> subNotes;
 }

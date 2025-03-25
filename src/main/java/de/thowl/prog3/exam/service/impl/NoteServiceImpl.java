@@ -52,6 +52,7 @@ public class NoteServiceImpl implements NoteService {
             }
         }
 
+        //Idee zur Ueberprüfung einer URL auf diese Weise von StackOverflow
         try {
             URL url = new URL(link);
             note.setLink(url.toExternalForm());
@@ -87,17 +88,16 @@ public class NoteServiceImpl implements NoteService {
 
         for (Note note : repository.findByUserId(userId)) {
             if (mustContainAllTags){
-                if ((checkFilterNoteType(filterNoteType, note.getType())) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
-                        (!filterTags.isEmpty() && note.getTags().containsAll(filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())))) {
+                if ((checkFilterNoteType(filterNoteType, note.getType())) && (filterTags.isEmpty() || note.getTags().containsAll(filterTags)) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) {
                     filteredNotes.add(note);
                 }
             }
             else{
-                if ((checkFilterNoteType(filterNoteType, note.getType())) && ((filterTags.isEmpty() && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) ||
-                        (!filterTags.isEmpty() && !Collections.disjoint(note.getTags(), filterTags) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())))) {
+                if ((checkFilterNoteType(filterNoteType, note.getType())) && (filterTags.isEmpty() || !Collections.disjoint(note.getTags(), filterTags)) && (filterCategory.equals("disabled") || note.getCategory() != null && filterCategory.equals(note.getCategory().getCategoryName()) || note.getCategory() == null && filterCategory.isEmpty())) {
                     filteredNotes.add(note);
                 }
             }
+
             if (!filterDateType.equals("disabled") && !filterDate.isEmpty()) {
                 LocalDateTime filterDateObject = LocalDateTime.parse(filterDate);
                 switch(filterDateType){
@@ -113,6 +113,7 @@ public class NoteServiceImpl implements NoteService {
                         break;
                 }
             }
+
             switch (sortBy){
                 case "createdAtAscending":
                     filteredNotes.sort((o1, o2) -> o1.getCreatedAt().compareTo(o2.getCreatedAt()));
@@ -120,7 +121,7 @@ public class NoteServiceImpl implements NoteService {
                 case "createdAtDescending":
                     filteredNotes.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
                     break;
-                case "category":
+                case "category": //new Comparator Syntax von StackOverflow
                     filteredNotes.sort(new Comparator<Note>() {
                         @Override
                         public int compare(Note o1, Note o2) {
